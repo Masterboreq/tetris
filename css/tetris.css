@@ -1,0 +1,78 @@
+/*
+	css/tetris.css
+*/
+
+#well {
+	width: 320px;
+	height: 440px;
+	border: 0px solid #000;
+	position: fixed;
+	left: 20px;
+	top: 40px;
+}
+
+.cell {
+	height: 20px;
+	width: 20px;
+	border: 1px solid #f1e8f7;
+	background: #fff;
+	float: left;
+	font: 12px sans-serif;
+	text-align: right;
+	line-height: 20px;
+}
+/*#row-22, #row-23 {
+	display: none;
+}*/
+
+.bumper {
+	background-color: #c4cace !important;
+}
+
+.row {
+	width: 310px dashed green;
+}
+
+.clearfloat {
+	clear: both;
+}
+
+.buttons {
+	display: block;
+	min-width: 180px;
+	margin-bottom: 3px;
+}
+fieldset#te {
+	position: absolute;
+	top: 60px;
+	left: 360px;
+	width: 160px;
+	height: auto;
+}
+legend {
+	background-color: #000;
+	color: #fff;
+	padding: 3px 6px;
+}
+
+#spawn-button {
+	right: 50px;
+	top: 50px;
+}
+
+#left-button {
+	width: 40px;
+	right: 180px;
+	top: 80px;
+}
+
+#right-button {
+	width: 40px;
+	right: 5px;
+	top: 80px;
+}
+
+#fall-button {
+	right: 50px;
+	top: 80px;
+}
