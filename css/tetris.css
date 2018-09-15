@@ -21,17 +21,27 @@
 	text-align: right;
 	line-height: 20px;
 }
-/*#row-22, #row-23 {
-	display: none;
-}*/
 
 .bumper {
-	background-color: #c4cace !important;
+	background-color: #8ecc15 !important;
+}
+
+.bumper-ex {
+	display: none;
 }
 
 .row {
 	width: 310px dashed green;
 }
+
+#row-0, #row-22, #row-23 {
+	display: none;
+}
+
+div#well div div:first-child {
+	display: none;
+}
+
 
 .clearfloat {
 	clear: both;
@@ -42,13 +52,29 @@
 	min-width: 180px;
 	margin-bottom: 3px;
 }
+
+.controls {
+	width: 20px;
+	text-align: right;
+}
+
 fieldset#te {
 	position: absolute;
-	top: 60px;
+	top: 40px;
 	left: 360px;
 	width: 160px;
 	height: auto;
+	display: none;
 }
+
+fieldset#monitor {
+	position: absolute;
+	top: 60px;
+	left: 360px;
+	width: 180px;
+	height: auto;
+}
+
 legend {
 	background-color: #000;
 	color: #fff;
