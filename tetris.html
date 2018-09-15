@@ -21,6 +21,48 @@
 		<input type="button" id="test6" value="6?" class="buttons"/>
 		<input type="button" id="test7" value="7?" class="buttons"/>
 	</fieldset>
+
+	<fieldset id="monitor">
+		<legend>Monitor parametrów</legend>
+		<span class="bold">Następny klocek</span>
+		<div id="next-piece">
+			<div class="row">
+				<div class="cell"></div>
+				<div class="cell"></div>
+				<div class="cell"></div>
+				<div class="cell"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row">
+				<div class="cell"></div>
+				<div class="cell"></div>
+				<div class="cell"></div>
+				<div class="cell"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row">
+				<div class="cell"></div>
+				<div class="cell"></div>
+				<div class="cell"></div>
+				<div class="cell"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row">
+				<div class="cell"></div>
+				<div class="cell"></div>
+				<div class="cell"></div>
+				<div class="cell"></div>
+				<div class="clearfloat"></div>
+			</div>
+		</div>
+		<label for="level">Ustaw poziom</label>
+		<input type="text" id="level" name="level" value="10" size="2" class="controls" />
+		<span class="bold">Aktualny poziom: </span><span id="gameplayLevel"> </span><br/>
+		<span class="bold">Punkty: </span><span id="points"> </span><br/>
+		<span class="bold">Linie: </span><span id="lines"> </span>
+		<input type="button" id="start-game" value="Rozpocznij" class="buttons"/>
+		<input type="button" id="pause-game" value="Pauza" class="buttons"/>
+	</fieldset>
 	<div id="well">
 		<div class="row" id="row-0">
 			<div class="cell bumper" occupied="1" style="border-color: #f1e8f7">0</div><!--drobny hack na potrzeby skryptu
@@ -38,9 +80,10 @@
 			<div class="cell bumper" occupied="1">11</div>
 			<div class="cell bumper" occupied="1">12</div>
 			<div class="cell bumper" occupied="1">13</div>
+			<div class="cell bumper" occupied="1">14</div>
 			<div class="clearfloat"></div>
 		</div>
-		<div class="row" id="row-1">
+		<div class="row" id="row-1" style="border: 0px solid red">
 			<div class="cell bumper" occupied="1">1</div>
 			<div class="cell bumper" occupied="1"></div>
 			<div class="cell" occupied="0"></div>
@@ -54,7 +97,7 @@
 			<div class="cell" occupied="0"></div>
 			<div class="cell" occupied="0"></div>
 			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
+			<div class="cell bumper-ex" occupied="1"></div>
 			<div class="clearfloat"></div>
 		</div>
 		<div class="row" id="row-2">
@@ -156,7 +199,7 @@
 			<div class="cell" occupied="0"></div>
 			<div class="cell" occupied="0"></div>
 			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
+			<div class="cell bumper-ex" occupied="1"></div>
 			<div class="clearfloat"></div>
 		</div>
 		<div class="row" id="row-8">
@@ -434,4 +477,5 @@
 	</div>
 	</body>
 		<script type="text/javascript" src="js/tetris.js"></script>
+		<!--script type="text/javascript" src="js/entropy.js"></script-->
 </html>

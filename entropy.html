@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pl">
+	<head>
+		<meta charset="utf-8">
+		<title>Entropia metryczna</title>
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<link rel="stylesheet" href="css/normalize.css">
+		<!--link rel="stylesheet" href="css/tetris.css"-->
+		<style type="text/css">
+			body {
+				background: #222;
+				color: #ccc;
+			}
+			.result {
+				width: 90%;
+				
+				overflow: clip;
+			}
+		</style>
+	</head>
+	<body>
+	<h1>Ciąg wygenerowany przy użyciu Math.random()</h1>
+	<p id="math-random" class="result"></p>
+	<h1>Ciąg wygenerowany przy użyciu Window.crypto.getRandomValues()</h1>
+	<p id="crypto-random" class="result"> </p>
+	<h1>Ciąg wygenerowany przy użyciu generateSalt()</h1>
+	<p id="salt-random" class="result"> </p>
+	<!--fieldset id="te">
+		<legend>Środowiska testowe</legend>
+		<input type="button" id="test1" value="1?" class="buttons"/>
+		<input type="button" id="test2" value="2?" class="buttons"/>
+		<input type="button" id="test3" value="3?" class="buttons"/>
+		<input type="button" id="test4" value="4?" class="buttons"/>
+		<input type="button" id="test5" value="5?" class="buttons"/>
+		<input type="button" id="test6" value="6?" class="buttons"/>
+		<input type="button" id="test7" value="7?" class="buttons"/>
+	</fieldset>
+
+	<fieldset id="monitor">
+		<legend>Monitor parametrów</legend>
+		<label for="level">Ustaw poziom</label>
+		<input type="text" id="level" name="level" value="10" size="2" class="controls" />
+		<span class="bold">Aktualny poziom: </span><span id="gameplayLevel"> </span><br/>
+		<span class="bold">Punkty: </span><span id="points"> </span><br/>
+		<span class="bold">Linie: </span><span id="lines"> </span>
+		<input type="button" id="start-game" value="Rozpocznij" class="buttons"/>
+		<input type="button" id="pause-game" value="Pauza" class="buttons"/>
+	</fieldset-->
+	</body>
+	<script type="text/javascript" src="js/entropy.js"></script>
+</html>
