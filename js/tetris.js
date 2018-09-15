@@ -390,7 +390,7 @@ var oEvent = window.event,
 	//rzędy studzienki jako potomkowie elementu #well o klasie "row"
 	
 	oNextPiece = document.getElementById("next-piece"),
-	oPreviev = oNextPiece.getElementsByClassName("row");
+	oPreview = oNextPiece.getElementsByClassName("row");
 	
 	//spajanie rzędów i komórek w jeden obiekt, którego elementy można łatwo adresować i po nich iterować
 oRows.row = [];
@@ -406,6 +406,9 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 
 	//### Funkcje ###
 	setSpeed = function() {
+		/*
+			Ustawia prędkość opadania klocka na podstawie aktualnie osiągniętego przez gracza poziomu (iActualLevel).
+		*/
 		iActualLevel = iInitialLevel;
 		iActualSpeed = ((12 - iActualLevel)*50);
 		return iActualSpeed;
@@ -525,6 +528,7 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 			return true;
 		}
 		render();
+		renderPiecePreview(); //TU SKOŃCZYŁEŚ: nie działa!
 		return false;
 	},
 	stepDown = function() {
@@ -848,6 +852,8 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 			r = 0,
 			offsetX = 0, 
 			offsetY = 0,
+			cellX,
+			cell,
 			aActualMatrix;
 			/* offsetX i offsetY to komórka rysowania danego segmetu klocka w studzience */
 		
@@ -909,36 +915,33 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 		while(++r<=3);
 		return;
 	},
-	drawNextPiece = function() {
+	renderPiecePreview = function() {
 		/* 
 			Funkcja rysuje podgląd kolejnego klocka w okienku interfejsu gracza.
 		*/
-		var c = 0,
+		var c,
 			r = 0,
-			offsetX = 0, 
-			offsetY = 0,
+			cell,
 			aNextMatrix;
 			/* offsetX i offsetY to komórka rysowania danego segmetu klocka w studzience */
 		
 		// ### Pętla rysowania segmentów klocka w jego nowym położeniu ###
 		aNextMatrix = aPieces[iNextPiece].orientations[0].slice();
-		r = 0;
+		
 		//offsetX = oActualPiece.aActualTopLeft[1];
 		do {
-			//pętla rzędów: iterujemy tylko przez 4 rzędy
-			offsetY = r + oActualPiece.aActualTopLeft[0];
+			//pętla rzędów: 4 rzędy
 			c = 0;
 			do {
-				//pętla kolumn (komórek): iterujemy tylko przez 4 kolumny
-				cell = aActualMatrix[r][c]*1; // hack na rzutowanie zmiennej!
-				
+				//pętla kolumn (komórek): 4 kolumny
+				cell = aNextMatrix[r][c];
 				if(cell==1) {
 					//rysuj segment klocka
-					oRows.row[offsetY][offsetX+c].style.backgroundColor = oActualPiece.color;
+					oPreview[r].children[c].style.backgroundColor = oActualPiece.color;
 				}
 				else {
-					//rysuj siatkę pustych segmentów w trybie debuggera
-					//oRows.row[offsetY][offsetX+c].style.border = "1px dashed #bbb";
+					//rysuj pustych segment
+					oPreview[r].children[c].style.backgroundColor = "#fff";
 				}
 			}
 			while(++c<=3);
