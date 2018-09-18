@@ -58,8 +58,8 @@
 		<label for="level">Ustaw poziom</label>
 		<input type="text" id="level" name="level" value="10" size="2" class="controls" />
 		<span class="bold">Aktualny poziom: </span><span id="gameplayLevel"> </span><br/>
-		<span class="bold">Punkty: </span><span id="points"> </span><br/>
-		<span class="bold">Linie: </span><span id="lines"> </span>
+		<span class="bold">Punkty: </span><span id="points">0</span><br/>
+		<span class="bold">Linie: </span><span id="lines">0</span>
 		<input type="button" id="start-game" value="Rozpocznij" class="buttons"/>
 		<input type="button" id="pause-game" value="Pauza" class="buttons"/>
 	</fieldset>
@@ -83,7 +83,7 @@
 			<div class="cell bumper" occupied="1">14</div>
 			<div class="clearfloat"></div>
 		</div>
-		<div class="row" id="row-1" style="border: 0px solid red">
+		<div class="row" id="row-1" 	"border: 0px solid red">
 			<div class="cell bumper" occupied="1">1</div>
 			<div class="cell bumper" occupied="1"></div>
 			<div class="cell" occupied="0"></div>
@@ -97,7 +97,7 @@
 			<div class="cell" occupied="0"></div>
 			<div class="cell" occupied="0"></div>
 			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper-ex" occupied="1"></div>
+			<div class="cell bumper" occupied="1"></div>
 			<div class="clearfloat"></div>
 		</div>
 		<div class="row" id="row-2">
@@ -199,7 +199,7 @@
 			<div class="cell" occupied="0"></div>
 			<div class="cell" occupied="0"></div>
 			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper-ex" occupied="1"></div>
+			<div class="cell bumper" occupied="1"></div>
 			<div class="clearfloat"></div>
 		</div>
 		<div class="row" id="row-8">
