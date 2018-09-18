@@ -1,6 +1,9 @@
 /*
 	css/tetris.css
 */
+body {
+	background-color: #aaa;
+}
 
 #well {
 	width: 320px;
@@ -24,9 +27,6 @@
 
 .bumper {
 	background-color: #8ecc15 !important;
-}
-
-.bumper-ex {
 	display: none;
 }
 
@@ -73,6 +73,7 @@ fieldset#monitor {
 	left: 360px;
 	width: 180px;
 	height: auto;
+	background-color: #fff;
 }
 
 legend {
