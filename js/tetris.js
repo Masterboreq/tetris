@@ -20,20 +20,20 @@ var oEvent = window.event,
 	oStartGameButton = document.getElementById("start-game"),
 	oPauseGameButton = document.getElementById("pause-game"),
 	
-	//klocki	
 	aGameImplementationTopLeft = [0,5], //2,7
 	/*
 		Ta zmienna to źródło do kopiowania współrzędnych [Y,X] do aActualTopLeft klocków.
 		Kolejność i kierunek przepływu danych o współrzędnych to:
 		aGameImplementationTopLeft -> oPiece{N}.aActualTopLeft 
 		-> oActualPiece.aActualTopLeft -> poprzez funkcje {
-		 - detectCollision(),
 		 - stepDown(),
 		 - stepSide(),
 		 - flipPiece():
 		 aTrialTopLeft
-		} -> oActualPiece.aActualTopLeft
+		} -> detectCollision() -> oActualPiece.aActualTopLeft
 	*/
+	
+	/* ### Klocki ### */
 	oPieceO = {
 		orientations: [
 			[
@@ -223,6 +223,11 @@ var oEvent = window.event,
 		- stepDown(),
 		- stepSide().
 	*/
+	
+	iGravityInterval = null,
+	/* Zmienna iGravityInterval reprezentuje interwał opadu klocka */
+	
+	/* ### Liczniki gry ### */
 	aRowCompleteness = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 	/* Tablica jednowymiarowa, 21-elementowa przechowująca w swoich elementach informację o ilości zapełnionych segmentów w danym rzędzie studzienki. Jeden element tablicy = jeden rząd. Index [0] to zerowy (techniczny, nieaktywny!) rząd studzienki, [21] to rząd dwudziesty.
 	Tablicę aktualizują:
@@ -230,15 +235,19 @@ var oEvent = window.event,
 		- funkcja render() podczas etapu.
 	*/
 	iNextPiece = 0, //kolejny klocek w kolejce po aktualnie granym
-	
 	iRowCounter = 0, //licznik skompletowanych i wyczyszczonych rzędów
-	
-	iInitialLevel = 6, //numer poziomu startowego
-	
+	iPenaltyRows = -1,
+	/*
+		Licznik wskazujący, o ile rzędów opadł aktualnie grany klocek. Każdy rząd, o który opadnie klocek w wyniku swoobodnej grawitacji jest zaliczony jako karny.
+		Wartość początkowa to -1 dlatego, aby już pierwsza iteracja funkcji stepDown() nie naliczyła kary tylko za sam fakt narysowania klocka w jego startowym położeniu.
+		Zmienna jest potrzebna do nalicznia punktacji.
+		Zmiennę powiększa stepDown(), a resetuje do zera spawnPiece().
+	*/
+	iInitialLevel = 1, //numer poziomu startowego
 	iActualLevel = 1, //numer osiągniętego poziomu rozgrywki
-	
 	iActualSpeed = 500, //czas w ms opóźnienia skoku grawitacji. Wartość deklarowana. Wartość tej zmiennej będzie ustawiana przez funkcję setSpeed().
-		
+
+	/* ### Flagi aplikacji ### */
 	bClearRows = false,
 	/*
 		Flaga głównej pętli programu informująca, czy w danym momencie rozgrywki występuje sytuacja, w której osadzony klocek zapełnił jedną lub więcej rzędów studzienki.
@@ -409,9 +418,8 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 		/*
 			Ustawia prędkość opadania klocka na podstawie aktualnie osiągniętego przez gracza poziomu (iActualLevel).
 		*/
-		iActualLevel = iInitialLevel;
 		iActualSpeed = ((12 - iActualLevel)*50);
-		return iActualSpeed;
+		return;
 	}
 	generateEntropyPool = function(rows, chars) {
 		/*Generuje tzw. pulę entropii, czyli tablicę
@@ -454,19 +462,19 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 	pickChar = function() {
 		var r = Math.ceil(Math.random()*10), //wiersz w puli entropii
 			c = Math.ceil(Math.random()*100); //znak w wierszu
-		if(r > 9 || r < 0) {
+		if(r > (aEntropyPool.length-1) || r < 0) {
 			r = 0;
 		}
-		if(c > 99 || c < 0) {
+		row = new String(aEntropyPool[r]);
+		if(c > (row.length-1) || c < 0) {
 			c = 0;
 		}
-		row = new String(aEntropyPool[r]);
-		iChar = parseInt(row.charAt(c))
+		iChar = row.charAt(c)*1;
 		if(iChar<0) {
 			iChar = 0;
 		}
 		return iChar;
-	},	
+	},
 	initGame = function() {
 		/*
 			Resetuje ustawienia gry na początku rozgrywki.
@@ -496,9 +504,18 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 		while(--rw >= ileOdGory);
 		
 		bGameOver = false; //reset flagi końca gry
-		iInitialLevel = oLevelSelector.value; //ustawienie poziomu gracza (jeśli dostępne)
-		bPlay = true; //ustawienie flagi rozgrywki na trwającą
+		iInitialLevel = (oLevelSelector.value)*1; //ustawienie poziomu gracza (jeśli dostępne)
+		iActualLevel = Math.max(iInitialLevel, iActualLevel);
 		
+		drawPiece(); //losuj klocek inicjujący grę
+		bPlay = true; //togglePlay();
+		return;
+	},
+	main = function() {
+		//TODO: nie wygląda mi to, żeby miało działać zawsze poprawnie. Sprawdź potem, czy działa dobrze przy restarcie gry jak i w ogóle nowej grze!
+		initGame(); //reset środowiska rozgrywki
+		bRestarted = true; // podły hack na zmuszenie klocka do startu od najwyższego miejsca w studzience!
+		stepDown(); //rozpoczęcie głównej pętli rozgrywki
 		return;
 	},
 	drawPiece = function() {
@@ -524,11 +541,13 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 		
 		aTrialTopLeft = aGameImplementationTopLeft.slice(); //[0,5]; //ustawienie miejsca startowego 
 		iTrialOrientation = 0;
+		iPenaltyRows = -1; //reset licznika karnych rzędów
+		
 		if(detectCollision()) {
 			return true;
 		}
 		render();
-		renderPiecePreview(); //TU SKOŃCZYŁEŚ: nie działa!
+		renderPiecePreview();
 		return false;
 	},
 	stepDown = function() {
@@ -540,10 +559,11 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 		
 		/* Sprawdź poziom i zaktualizouj prędkość opadania klocka */
 		//iActualLevel = oLevelSelector.value; //UWAGA! Brak zabezpieczenia przed debilami, którzy wpiszą np. 1000 lub -5!
-		iActualLevel = 1 + Math.floor((iRowCounter-1)/10);
-		oGameplayLevel.firstChild.nodeValue = iActualLevel;
+	
+		iActualLevel = 1 + Math.floor((iRowCounter-1)/10); //TODO: należy pogodzić jakość tę linię z zapisami w setSpeed()
+		
 		setSpeed();
-		console.log(iActualSpeed);
+		oGameplayLevel.firstChild.nodeValue = iActualLevel;
 				
 		//UWAGA! KARKOLOMNE ROZWIĄZANIE O CHARAKTERZE REKURENCJI
 		clearInterval(iGravityInterval);
@@ -589,6 +609,7 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 			return;
 		}
 		render();
+		iPenaltyRows++; //powiększenie licznika kary za opad klocka
 		return;
 	},
 	stepSide = function(bDirection) {
@@ -607,7 +628,8 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 		aTrialTopLeft = oActualPiece.aActualTopLeft.slice();
 		aTrialTopLeft[1] = aTrialTopLeft[1]+i;
 		if(aTrialTopLeft[1]<0 || aTrialTopLeft[1]>10) {
-			//down&dirty hack again!
+			//podły hack na oszczędzanie mocy przerobowych w detectCollision()
+			//UWAGA! to działa, ale nie przy wszystkich orientacjach różnych klocków!
 			aTrialTopLeft = null;
 			console.log("Niedozwolony ruch!");
 			return;
@@ -640,42 +662,74 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 		/*
 			Funkcja odpowiada za natychmiastowy zrzut klocka do miejsca jego lądowania w najniższym możliwym punkcie w danych warunkach rozgrywki.
 
-		### Algorytm ###
+		### Algorytm A:v"Głęboka detekcja kolizji" - propozycja ###
 		1. Skopiuj obraz matrycy klocka oActualPiece[actualOrientation] do aActualMatrix
 		2. POMYSŁ na dalszy krok:
 		 - odfiltruj z aActualMatrix tylko wypełnione segmenty tworząc tym samym nową wersję aActualMatrix zawierającą informację tylko o wypełnionych segmentach. Tutaj dokonaj transkrybcji współrzędnych na rzeczywiste.
 		 3. Zaczynając od dolnego rzędu (o najwyższym numerze) aActualMatrix, iteruj po jego segmentach:
 		  - dla X-owej współrzędnej rzeczywistej bieżącego segmentu przeszukaj rzędy od X+1 do X+n w poszukiwaniu stanu occupied ="1"
-		  TU SKOŃCZYŁEŚ: zajrzyj jeszcze do kodu funkcji land(), bo tam mogą znajdować się ciekawe pomysły
-		  
+		
+		### Algorytm B: "Schodź coraz niżej i użyj detektora kolizji" - propozycja ###
+		1. Ustawiaj zmienną aTrialTopLeft poprzez skopiowanie oActualPiece.aActualTopLeft;
+		2. W pętli:
+		 - inkrementuj aTrialTopLeft[0],
+		 - sprawdź możliwą kolizję przy użyciu detectCollision(),
+		 JEŻELI: detectCollision() zwróci true (kolizja),
+		 TO: 
+		  - przerwij pętlę,
+		 3. Wywołaj render();
+		 4. Wywołaj stepDown()
 		*/
+
+		//B1
+		var aLocalTrialTopLeft = oActualPiece.aActualTopLeft.slice(),
+			aInitialTopLeft = oActualPiece.aActualTopLeft.slice(), //kopia początkowj pozycji, z której zaczął spadać klocek. Potrzebne do wyczyszczenia tej okolicy studzienki po finalnym obliczeniu pozycji lądowania, aby nie pozostawić artefaktów
+		r = 4,
+		c,
+		cellState,
+		offsetX,
+		offsetY;
 		
-		//1.
-		aActualMatrix = oActualPiece.orientations[oActualPiece.actualOrientation].slice();
-		
-		//2.
-		var r = 0, c;
+		/* ### Pętla odnajdywania najniższego możliwego miejsca upadku klocka ### */
 		do {
-			c = 0; //pierwszy od lewej segment klocka
-			do {
-				cellState = aActualMatrix[r][c];
-				if(cellState==1) {
-					//tutaj już należy dokonać transkrybcji wypełnionych segmentów na ich współrzędne rzeczywiste w studzience
-				}
-				else {
-					//usuń element aActualMatrix[r][c] (dla danej iteracji)
-				}
+			aLocalTrialTopLeft[0]++;
+			aTrialTopLeft = aLocalTrialTopLeft.slice();
+			if(detectCollision()) {
+				break;
 			}
-			while(++c<4);
 		}
-		while(++r<4);
-		//po zakończeniu tej pętli powinna zostać matryca zawierająca tylko wypełnionych segmenty
-		console.log(aActualMatrix);
+		while(true);
+		
+		/* ### Czyszczenie pozycji inicjalnej z artefaktów
+		po pierwotnym położeniu klocka ### */
+		aInitialTopLeft[0]--;
+		aInitialTopLeft[1]--;
+		do {
+			offsetY = aInitialTopLeft[0] + r;
+			c = 4;
+			do {
+				offsetX = aInitialTopLeft[1] + c;
+				cellState = oRows.row[offsetY][offsetX].getAttribute("occupied")*1;
+				if(cellState!=1) {
+					//wyczyść tło, jeśli komórka nie jest zajęta 
+					oRows.row[offsetY][offsetX].style.backgroundColor = "#fff";
+				}
+				//w każdym przypadku przywróć początkowe obramowanie komórek studzienki
+				oRows.row[offsetY][offsetX].style.border = "1px solid "+sCellBorderColor;
+			}
+			while(--c);
+		}
+		while(--r);
+		//B3
+		render(); //B4
+		clearInterval(iGravityInterval);
+		stepDown();
 		return false;
 	},
 	keyboardHandler = function(oEvent) {
 		//obługa klawiatury dla ruchu klocków. Być może trzeba zmienić nazwę tej funkcji
 		switch(oEvent.keyCode) {
+			//spacja
 			case 32:	bGameOver ? main() : togglePlay();
 			break;
 			//Przesuwanie klocka w lewo
@@ -688,7 +742,7 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 			case 39: bPlay ? stepSide(1) : null;
 			break;
 			//Przesuwanie klocka w dół
-			case 40:	bPlay ? dropPiece() : null;
+			case 40:	bPlay ? dropPiece() : null; //stepDown()
 			break;
 		}
 		/* TYLKO DLA DEBUGGERA!
@@ -755,7 +809,7 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 
 		  JEŻELI aTrialTopLeft == null -> przepisz wartość oActualPiece.aActualTopLeft do aTrialTopLeft;*/
 		if(aTrialTopLeft == null) {
-			aTrialTopLeft = oActualPiece.aActualTopLeft.slice();
+			aTrialTopLeft = oActualPiece.aActualTopLeft;
 		}
 		 /*
 		 2. Przeczytaj zmienną iTrialOrientation.
@@ -854,6 +908,7 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 			offsetY = 0,
 			cellX,
 			cell,
+			cellState,
 			aActualMatrix;
 			/* offsetX i offsetY to komórka rysowania danego segmetu klocka w studzience */
 		
@@ -870,7 +925,6 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 		*/
 		do {
 			//pętla rzędów: iterujemy przez 5 rzędów
-			//offsetY = r + oActualPiece.aActualTopLeft[0]; //TODO: to jest do wywalenia?
 			c = 0;
 			do {
 				//pętla kolumn (komórek): iterujemy przez 6 kolumn
@@ -913,6 +967,7 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 			while(++c<=3);
 		}
 		while(++r<=3);
+		console.log(iActualSpeed);
 		return;
 	},
 	renderPiecePreview = function() {
@@ -922,11 +977,12 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 		var c,
 			r = 0,
 			cell,
-			aNextMatrix;
+			aNextMatrix = aPieces[iNextPiece].orientations[0].slice(),
+			sColor = aPieces[iNextPiece].color;
 			/* offsetX i offsetY to komórka rysowania danego segmetu klocka w studzience */
 		
 		// ### Pętla rysowania segmentów klocka w jego nowym położeniu ###
-		aNextMatrix = aPieces[iNextPiece].orientations[0].slice();
+		;
 		
 		//offsetX = oActualPiece.aActualTopLeft[1];
 		do {
@@ -937,7 +993,7 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 				cell = aNextMatrix[r][c];
 				if(cell==1) {
 					//rysuj segment klocka
-					oPreview[r].children[c].style.backgroundColor = oActualPiece.color;
+					oPreview[r].children[c].style.backgroundColor = sColor;
 				}
 				else {
 					//rysuj pustych segment
@@ -947,6 +1003,8 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 			while(++c<=3);
 		}
 		while(++r<=3);
+		
+		oLines.firstChild.nodeValue = iRowCounter; //pierwotnie było ba końcu collapse()
 		return;
 	},
 	collapse = function() {
@@ -1004,7 +1062,6 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 		}
 		while(--r>0);
 		//uaktualnienie tablicy wyników
-		oLines.firstChild.nodeValue = iRowCounter;
 		bClearRows = false;
 		return;
 	},
@@ -1040,8 +1097,6 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 		return;
 	},
 	
-	iGravityInterval = null,
-	
 	togglePlay = function() {
 		if(bPlay) {
 			//jeśli rozgrywka trwa, pauzuj ją!
@@ -1058,14 +1113,9 @@ var sCellBorderColor = oRows.row[0][0].style.borderColor,
 		return;
 	},
 	
-	main = function() {
-		initGame(); //reset środowiska rozgrywki
-		stepDown(); //rozpoczęcie głównej pętli rozgrywki
-		return;
-	},
-	
 	restart = function() {
 		//TODO: prawdopodobnie do integrowania w f-cji main()
+		//UWAGA! Ta funkcja na razie NIC nie robi!
 		drawPiece(); //losuj klocek inicjujący grę po restarcie
 		bRestarted = true;
 		main();
@@ -1166,10 +1216,11 @@ oTest5.setAttribute("value",oTestEnvironment.scenarios[4][0]);
 oTest6.setAttribute("value",oTestEnvironment.scenarios[5][0]);
 oTest7.value = oTestEnvironment.scenarios[6][0]; //w ten sposób także działa
 
-oLevelSelector.value = iInitialLevel;
+
 
 //loadTest(6);
-drawPiece(); //losuj klocek inicjujący grę
+//initGame();
+//drawPiece(); //losuj klocek inicjujący grę
 //TODO: funkcja init() musi odpalić zanim wylosuje się pierwszy klocek, bo inaczej pierwszy kock zawsze będzie klockiem O
 
 document.addEventListener("keydown", keyboardHandler, true);
