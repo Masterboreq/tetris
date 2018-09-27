@@ -6,475 +6,492 @@
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-		<link rel="stylesheet" href="css/normalize.css">
+		<!--link rel="stylesheet" href="css/normalize.css"-->
 		<link rel="stylesheet" href="css/tetris.css">
 	</head>
 	<body>
-	<fieldset id="te">
-		<legend>Środowiska testowe</legend>
-		<input type="button" id="test1" value="1?" class="buttons"/>
-		<input type="button" id="test2" value="2?" class="buttons"/>
-		<input type="button" id="test3" value="3?" class="buttons"/>
-		<input type="button" id="test4" value="4?" class="buttons"/>
-		<input type="button" id="test5" value="5?" class="buttons"/>
-		<input type="button" id="test6" value="6?" class="buttons"/>
-		<input type="button" id="test7" value="7?" class="buttons"/>
-	</fieldset>
-
-	<fieldset id="monitor">
-		<legend>Monitor parametrów</legend>
-		<span class="bold">Następny klocek</span>
-		<div id="next-piece">
-			<div class="row">
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
+	<div id="wrapper">
+		<div id="well">
+			<div class="row" id="row-0">
+				<div class="cell bumper" occupied="1" style="border-color: #f1e8f7">0</div>
+				<!--drobny hack na potrzeby skryptu
+				Pamiętaj, aby zsynchronizować wartość border-color z właściwością klasy .cell pliku CSS-->
+				<div class="cell bumper" occupied="1">1</div>
+				<div class="cell bumper" occupied="1">2</div>
+				<div class="cell bumper" occupied="1">3</div>
+				<div class="cell bumper" occupied="1">4</div>
+				<div class="cell bumper" occupied="1">5</div>
+				<div class="cell bumper" occupied="1">6</div>
+				<div class="cell bumper" occupied="1">7</div>
+				<div class="cell bumper" occupied="1">8</div>
+				<div class="cell bumper" occupied="1">9</div>
+				<div class="cell bumper" occupied="1">10</div>
+				<div class="cell bumper" occupied="1">11</div>
+				<div class="cell bumper" occupied="1">12</div>
+				<div class="cell bumper" occupied="1">13</div>
+				<div class="cell bumper" occupied="1">14</div>
 				<div class="clearfloat"></div>
 			</div>
-			<div class="row">
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
+			<div class="row" id="row-1" 	"border: 0px solid red">
+				<div class="cell bumper" occupied="1">1</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
 				<div class="clearfloat"></div>
 			</div>
-			<div class="row">
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
+			<div class="row" id="row-2">
+				<div class="cell bumper" occupied="1">2</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
 				<div class="clearfloat"></div>
 			</div>
-			<div class="row">
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
+			<div class="row" id="row-3">
+				<div class="cell bumper" occupied="1">3</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
 				<div class="clearfloat"></div>
 			</div>
-		</div>
-		<label for="level">Ustaw poziom</label>
-		<input type="text" id="level" name="level" value="10" size="2" class="controls" />
-		<span class="bold">Aktualny poziom: </span><span id="gameplayLevel"> </span><br/>
-		<span class="bold">Punkty: </span><span id="points">0</span><br/>
-		<span class="bold">Linie: </span><span id="lines">0</span>
-		<input type="button" id="start-game" value="Rozpocznij" class="buttons"/>
-		<input type="button" id="pause-game" value="Pauza" class="buttons"/>
-	</fieldset>
-	<div id="well">
-		<div class="row" id="row-0">
-			<div class="cell bumper" occupied="1" style="border-color: #f1e8f7">0</div><!--drobny hack na potrzeby skryptu
-			Pamiętaj, aby zsynchronizować wartość border-color z właściwością klasy .cell pliku CSS-->
-			<div class="cell bumper" occupied="1">1</div>
-			<div class="cell bumper" occupied="1">2</div>
-			<div class="cell bumper" occupied="1">3</div>
-			<div class="cell bumper" occupied="1">4</div>
-			<div class="cell bumper" occupied="1">5</div>	
-			<div class="cell bumper" occupied="1">6</div>
-			<div class="cell bumper" occupied="1">7</div>
-			<div class="cell bumper" occupied="1">8</div>
-			<div class="cell bumper" occupied="1">9</div>
-			<div class="cell bumper" occupied="1">10</div>
-			<div class="cell bumper" occupied="1">11</div>
-			<div class="cell bumper" occupied="1">12</div>
-			<div class="cell bumper" occupied="1">13</div>
-			<div class="cell bumper" occupied="1">14</div>
+			<div class="row" id="row-4">
+				<div class="cell bumper" occupied="1">4</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-5">
+				<div class="cell bumper" occupied="1">5</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-6">
+				<div class="cell bumper" occupied="1">6</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-7">
+				<div class="cell bumper" occupied="1">7</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-8">
+				<div class="cell bumper" occupied="1">8</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-9">
+				<div class="cell bumper" occupied="1">9</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-10">
+				<div class="cell bumper" occupied="1">10</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-11">
+				<div class="cell bumper" occupied="1">11</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-12">
+				<div class="cell bumper" occupied="1">12</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-13">
+				<div class="cell bumper" occupied="1">13</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-14">
+				<div class="cell bumper" occupied="1">14</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-15">
+				<div class="cell bumper" occupied="1">15</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-16">
+				<div class="cell bumper" occupied="1">16</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-17">
+				<div class="cell bumper" occupied="1">17</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-18">
+				<div class="cell bumper" occupied="1">18</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-19">
+				<div class="cell bumper" occupied="1">19</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-20">
+				<div class="cell bumper" occupied="1">20</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell" occupied="0"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-21">
+				<div class="cell bumper" occupied="1">21</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-22">
+				<div class="cell bumper" occupied="1">22</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+			<div class="row" id="row-23">
+				<div class="cell bumper" occupied="1">23</div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="cell bumper" occupied="1"></div>
+				<div class="clearfloat"></div>
+			</div>
+		</div><!-- KONIEC #well -->
+		
+		<div id="gui-left">Coś dla nerdów:)</div>
+		<div id="vignette">
+			<div id="left-bank">LB</div>
+			<div id="wallpaper"></div>
+			<div id="right-bank">RB</div>
 			<div class="clearfloat"></div>
+			<div id="bottom-bank"><span style="font-size: 18px">Podłoga</span></div>
 		</div>
-		<div class="row" id="row-1" 	"border: 0px solid red">
-			<div class="cell bumper" occupied="1">1</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-2">
-			<div class="cell bumper" occupied="1">2</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-3">
-			<div class="cell bumper" occupied="1">3</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-4">
-			<div class="cell bumper" occupied="1">4</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-5">
-			<div class="cell bumper" occupied="1">5</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-6">
-			<div class="cell bumper" occupied="1">6</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-7">
-			<div class="cell bumper" occupied="1">7</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-8">
-			<div class="cell bumper" occupied="1">8</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-9">
-			<div class="cell bumper" occupied="1">9</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-10">
-			<div class="cell bumper" occupied="1">10</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-11">
-			<div class="cell bumper" occupied="1">11</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-12">
-			<div class="cell bumper" occupied="1">12</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-13">
-			<div class="cell bumper" occupied="1">13</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-14">
-			<div class="cell bumper" occupied="1">14</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-15">
-			<div class="cell bumper" occupied="1">15</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-16">
-			<div class="cell bumper" occupied="1">16</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-17">
-			<div class="cell bumper" occupied="1">17</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-18">
-			<div class="cell bumper" occupied="1">18</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-19">
-			<div class="cell bumper" occupied="1">19</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-20">
-			<div class="cell bumper" occupied="1">20</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell" occupied="0"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-21">
-			<div class="cell bumper" occupied="1">21</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-22">
-			<div class="cell bumper" occupied="1">22</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
-		</div>
-		<div class="row" id="row-23">
-			<div class="cell bumper" occupied="1">23</div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="cell bumper" occupied="1"></div>
-			<div class="clearfloat"></div>
+		<div id="gui-right"> Liczniki, kolejny klocek
+			<fieldset id="te">
+			<legend>Środowiska testowe</legend>
+			<input type="button" id="test1" value="1?" class="buttons"/>
+			<input type="button" id="test2" value="2?" class="buttons"/>
+			<input type="button" id="test3" value="3?" class="buttons"/>
+			<input type="button" id="test4" value="4?" class="buttons"/>
+			<input type="button" id="test5" value="5?" class="buttons"/>
+			<input type="button" id="test6" value="6?" class="buttons"/>
+			<input type="button" id="test7" value="7?" class="buttons"/>
+		</fieldset>
+		<fieldset id="monitor">
+			<legend>Monitor parametrów</legend>
+			<span class="bold">Następny klocek</span>
+			<div id="next-piece">
+				<div class="row">
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="clearfloat"></div>
+				</div>
+				<div class="row">
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="clearfloat"></div>
+				</div>
+				<div class="row">
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="clearfloat"></div>
+				</div>
+				<div class="row">
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="clearfloat"></div>
+				</div>
+			</div>
+			<label for="level">Ustaw poziom</label>
+			<input type="text" id="level" name="level" value="10" size="2" class="controls" />
+			<span class="bold">Aktualny poziom: </span><span id="gameplayLevel"> </span><br/>
+			<span class="bold">Punkty: </span><span id="points">0</span><br/>
+			<span class="bold">Linie: </span><span id="lines">0</span>
+			<input type="button" id="start-game" value="Rozpocznij" class="buttons"/>
+			<input type="button" id="pause-game" value="Pauza" class="buttons"/>
+		</fieldset>
+		
 		</div>
 	</div>
+	<div class="clearfloat"></div>
+	<!-- Komunikaty GUI: overlay -->
+	<div id="overlay" style="display: none">&nbsp;</div>
+	<div id="ticker" style="display: none">&nbsp;</div>
 	</body>
 		<script type="text/javascript" src="js/tetris.js"></script>
 		<!--script type="text/javascript" src="js/entropy.js"></script-->
