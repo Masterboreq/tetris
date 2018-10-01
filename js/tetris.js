@@ -1,6 +1,7 @@
 /* 
 	js/tetris.js
 	Author: Marcin Borkowicz 2018
+	Package: Classic Tetris
 	Codebase: github.com/Masterboreq/tetris
 	TODO: Website: boreq.com/tetris
 */
@@ -23,6 +24,14 @@ var oEvent = window.event,
 	oLines = document.getElementById("lines"),
 	oStartGameButton = document.getElementById("start-game"),
 	oPauseGameButton = document.getElementById("pause-game"),
+	
+	oK0 = document.getElementById("k0"),
+	oK1 = document.getElementById("k1"),
+	oK2 = document.getElementById("k2"),
+	oK3 = document.getElementById("k3"),
+	oK4 = document.getElementById("k4"),
+	oK5 = document.getElementById("k5"),
+	oK6 = document.getElementById("k6"),
 	
 	/* ### Elementy GUI ### */
 	oOverlay = document.getElementById("overlay"),
@@ -457,6 +466,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		chars to mnożnik wynikowego ciągu o dł. 10*chars
 		*/
 		var gt6 = function(match, p1, offset, string) {
+			//funkcja zwrotna (callback) dla String.replace()
 			p1 = parseInt(p1);
 			p1 = p1*(Math.ceil(Math.random()));
 			return p1%7;
@@ -487,68 +497,94 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		return aRandEntropyPool;
 	},
 	
-	createHistogram = function(string) {
-		//TODO: tę funkcję trzeba tak przepisać, aby działała w trybie dokładania danych, a nie ciągłego mielenia ciągu danych od początku.
-		var sString = "", 
-		iLength,
-		oHistogram = {
-			aSymbols: [],
-			aQuantity: [],
-			aFrequency: []
-		},
-		iIndex = 0, //wskaźnik aktualnego wyrazu
-		iSymbolsIndex = 0;
+	Histogram = function(string) {
 		
-		string += ""; //rzutowanie zmiennej
-		if(string.length > 0) {
-			iLength = sString.length,
-			sString = string;
-		}
-		else {
-			return false;
-		}
+		this.elements = [], //tablica unikatowych elementów (dziedzina histogramu)
+		this.quantity = [], //tablica ilości danego elementu (zbiór wartości)
+		this.count = 0, //całkowita ilość elementów
+		this.frequency = [], //tablica częstotliwość występowania danego elementu
+		this.addElement = function(element) {
+			//metoda służąca dodawaniu kolejnego elementu do rozkładu
+			var elem = element + ""; //gwarancja, że to będzie tylko jeden znak
+			elem = elem.charAt(0);
+			this.__calculateDistribution(elem);
+			return;
+		};
 		
-		//ładuj pierwszy znak
-		oHistogram.aSymbols.push(sString.charAt(iIndex++));
-		oHistogram.aQuantity.push(1);
-
+		var iLength,
+		i = 0, //wskaźnik aktualnego wyrazu
+		aChars = ["0","1","2","3","4","5","6"], //tablica elementów dziedziny (UWAGA! Wyłącznie dla zliczania tetramino tej wersji Tetrisa)
+		sString,
+		iSymbolsIndex,
+		i = 0;
+		
+		
+		/* ### Zerowanie rozkładu dla zadanej zmienną aChars dziedziny elementów ### */
 		do {
-			var iSymbolsIndex = oHistogram.aSymbols.length,
-				sChar = sString.charAt(iIndex);
+			if(this.elements.indexOf(aChars[i])<0) {
+				this.elements.push(aChars[i]);
+				this.quantity.push(0);
+				this.frequency.push(0.0);
+			}
+		}
+		while(aChars[++i]);
+
+		/* ### Techniczna funkcja przeliczająca rozkład ### */
+		this.__calculateDistribution = function(sString) {
+			i = 0;
 			do {
-				if(sChar == oHistogram.aSymbols[--iSymbolsIndex]) {
-					//inkrementuj właściwy indeks oHistogram.aQuantity
-					oHistogram.aQuantity[iSymbolsIndex]++;
-					break;
+				iSymbolsIndex = this.elements.length;
+				var sChar = "" + sString.charAt(i);
+				do {
+					if(sChar == this.elements[--iSymbolsIndex]) {
+						//inkrementuj właściwy indeks this.quantity
+						this.quantity[iSymbolsIndex]++;
+						this.count++;
+						break;
+					}
+				}
+				while(iSymbolsIndex >= 0);
+				
+				if(iSymbolsIndex < 0) {
+					this.elements.push(sString.charAt(i));
+					this.quantity.push(1);
+					this.count++;
 				}
 			}
-			while(iSymbolsIndex >= 0);
-			
-			if(iSymbolsIndex < 0) {
-				oHistogram.aSymbols.push(sString.charAt(iIndex));
-				oHistogram.aQuantity.push(1);
-			}
-		}
-		while(++iIndex < iLength);
+			while(sString.charAt(++i));
 
-		//wyliczanie częstotliwości występowania danego symbolu
-		iSymbolsIndex = oHistogram.aSymbols.length;
-		do {
-			freq = oHistogram.aQuantity[--iSymbolsIndex]/iLength;
-			oHistogram.aFrequency.unshift(freq);
-			//dokładamy wyrazy od końca; każdy kolejny wyraz PRZED poprzednio dodanym
-		}
-		while(iSymbolsIndex > 0);
+			//wyliczanie częstotliwości występowania danego symbolu
+			iSymbolsIndex = this.elements.length;
+			do {
+				freq = this.quantity[--iSymbolsIndex]/iLength;
+				this.frequency[iSymbolsIndex] = freq;
+				
+			}
+			while(iSymbolsIndex > 0);
+
+			return;
+		};
 		
-		return oHistogram;
+		/* ### Tworzenie początkowego rozkładu zmiennej, jeśli konstruktor obiektu wywołano z argumentem zawierajacym elementy ### */
+		if(typeof string !== undefined || typeof string !== null) {
+			return this;
+		}
+		string += ""; //rzutowanie zmiennej
+		if(string.length > 0) {
+			iLength = string.length,
+			sString = string;
+			this.__calculateDistribution(sString);
+		}
+		return this;
 	},
-	pickChar = function() {
+	
+	pickChar = function(entropyPool) {
 		var r = Math.ceil(Math.random()*10), //wiersz w puli entropii
 			c = Math.ceil(Math.random()*100); //znak w wierszu
-		if(r > (aEntropyPool.length-1) || r < 0) {
+		if(r > (entropyPool.length-1) || r < 0) {
 			r = 0;
 		}
-		row = new String(aEntropyPool[r]);
+		row = new String(entropyPool[r]);
 		if(c > (row.length-1) || c < 0) {
 			c = 0;
 		}
@@ -584,7 +620,10 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		aEntropyPool = generateEntropyPool(10,10); //generowanie puli entropii
 
 		/* Losowanie pierwszego klocka*/
-		iNextPiece = pickChar();
+		iNextPiece = pickChar(aEntropyPool);
+		
+		histogram = new Histogram(); //tworzenie nowego rozkładu klocków
+		//UWAGA! Wywołanie metody Histogram.addElement() dopiero w drawPiece()
 		
 		aRowCompleteness = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]; //reset zmiennej globalnej
 
@@ -597,6 +636,8 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		iActualLevel = Math.max(iInitialLevel, iActualLevel);
 		//TODO: to całe jest do poprawy, gdy będzie już działać obsługa local storage.
 		
+		
+		
 		drawPiece(); //losuj klocek inicjujący grę
 		bPlay = true; //togglePlay();
 		return;
@@ -606,7 +647,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		bRestarted = true; // podły hack na zmuszenie klocka do startu od najwyższego miejsca w studzience!
 		oOverlay.style.display = "none";
 		oTicker.style.display = "none";
-		oOverlay.style.backgroundColor = "rgba(0, 0, 0, .95)";
+		oOverlay.style.backgroundColor = "rgba(0, 0, 0, .0)"; //.95
 		main(); //rozpoczęcie głównej pętli rozgrywki
 		return;
 	},
@@ -626,7 +667,9 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		console.log("Aktualny klocek: "+iNextPiece);
 		
 		/* Losowanie kolejnego klocka*/
-		iNextPiece = pickChar();
+		iNextPiece = pickChar(aEntropyPool);
+		histogram.addElement(iNextPiece);
+		console.log(histogram.count);
 		
 		if(spawnPiece()) {
 			return true; //aby utworzyć kaskadę ewentualnych błędów
@@ -1074,7 +1117,6 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 			while(++c<=3);
 		}
 		while(++r<=3);
-		console.log(iActualSpeed);
 		return;
 	},
 	renderPiecePreview = function() {
@@ -1112,6 +1154,13 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		while(++r<=3);
 		
 		oLines.firstChild.nodeValue = iRowCounter; //pierwotnie było ba końcu collapse()
+		oK0.firstChild.nodeValue = histogram.quantity[0];
+		oK1.firstChild.nodeValue = histogram.quantity[1];
+		oK2.firstChild.nodeValue = histogram.quantity[2];
+		oK3.firstChild.nodeValue = histogram.quantity[3];
+		oK4.firstChild.nodeValue = histogram.quantity[4];
+		oK5.firstChild.nodeValue = histogram.quantity[5];
+		oK6.firstChild.nodeValue = histogram.quantity[6];
 		return;
 	},
 	collapse = function() {
@@ -1351,8 +1400,6 @@ oTest4.setAttribute("value",oTestEnvironment.scenarios[3][0]);
 oTest5.setAttribute("value",oTestEnvironment.scenarios[4][0]);
 oTest6.setAttribute("value",oTestEnvironment.scenarios[5][0]);
 oTest7.value = oTestEnvironment.scenarios[6][0]; //w ten sposób także działa
-
-
 
 //loadTest(6);
 //initGame();
