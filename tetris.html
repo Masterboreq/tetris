@@ -11,6 +11,13 @@
 	</head>
 	<body>
 	<div id="wrapper">
+		<div id="toolbar">
+			<div id="tetris-logo">Logo</div>
+			<div class="menu-item">Hi-Scores</div>
+			<div class="menu-item">Manual</div>
+			<div class="menu-item">Extras</div>
+			<div class="clearfloat"></div>
+		</div>
 		<div id="well">
 			<div class="row" id="row-0">
 				<div class="cell bumper" occupied="1" style="border-color: #f1e8f7">0</div>
@@ -424,16 +431,73 @@
 				<div class="clearfloat"></div>
 			</div>
 		</div><!-- KONIEC #well -->
-		
-		<div id="gui-left">Coś dla nerdów:)</div>
-		<div id="vignette">
-			<div id="left-bank">LB</div>
-			<div id="wallpaper"></div>
-			<div id="right-bank">RB</div>
-			<div class="clearfloat"></div>
-			<div id="bottom-bank"><span style="font-size: 18px">Podłoga</span></div>
+		<div id="gui-left">
+			<span class="bold">Hi-Score</span>
+			<span class="score">50000</span>
+			<span class="bold">Histogram klocków</span>
+			<div id="histogram">
+				<div class="pile" id="y-axis">
+					<span class="percentage">100%</span>
+					<span class="percentage">75%</span>
+					<span class="percentage">50%</span>
+					<span class="percentage">25%</span>
+					<span class="percentage">0%</span>
+				</div>
+				<div class="pile">
+					<span class="percentage">0</span>
+				</div>
+				<div class="pile">
+					<span class="percentage">0</span>
+				</div>
+				<div class="pile">
+					<span class="percentage">0</span>
+				</div>
+				<div class="pile">
+					<span class="percentage">0</span>
+				</div>
+				<div class="pile">
+					<span class="percentage">0</span>
+				</div>
+				<div class="pile">
+					<span class="percentage">0</span>
+				</div>
+				<div class="pile">
+					<span class="percentage">0</span>
+				</div>
+				<div id="y-podium" class="pile podium">
+					<span class="percentage">0</span>
+				</div>
+				<div class="pile podium">
+					<span class="percentage" id="k0">0</span>
+				</div>
+				<div class="pile podium">
+					<span class="percentage" id="k1">0</span>
+				</div>
+				<div class="pile podium">
+					<span class="percentage" id="k2">0</span>
+				</div>
+				<div class="pile podium">
+					<span class="percentage" id="k3">0</span>
+				</div>
+				<div class="pile podium">
+					<span class="percentage" id="k4">0</span>
+				</div>
+				<div class="pile podium">
+					<span class="percentage" id="k5">0</span>
+				</div>
+				<div class="pile podium">
+					<span class="percentage" id="k6">0</span>
+				</div>
+			</div>
 		</div>
-		<div id="gui-right"> Liczniki, kolejny klocek
+		<div id="vignette">
+			<div id="left-bank"></div>
+			<div id="wallpaper"></div>
+			<div id="right-bank"></div>
+			<div class="clearfloat"></div>
+			<div id="bottom-bank"><span style="font-size: 18px"></span></div>
+		</div>
+		<div id="gui-right">
 			<fieldset id="te">
 			<legend>Środowiska testowe</legend>
 			<input type="button" id="test1" value="1?" class="buttons"/>
@@ -445,7 +509,6 @@
 			<input type="button" id="test7" value="7?" class="buttons"/>
 		</fieldset>
 		<fieldset id="monitor">
-			<legend>Monitor parametrów</legend>
 			<span class="bold">Następny klocek</span>
 			<div id="next-piece">
 				<div class="row">
@@ -477,15 +540,17 @@
 					<div class="clearfloat"></div>
 				</div>
 			</div>
-			<label for="level">Ustaw poziom</label>
-			<input type="text" id="level" name="level" value="10" size="2" class="controls" />
-			<span class="bold">Aktualny poziom: </span><span id="gameplayLevel"> </span><br/>
-			<span class="bold">Punkty: </span><span id="points">0</span><br/>
-			<span class="bold">Linie: </span><span id="lines">0</span>
-			<input type="button" id="start-game" value="Rozpocznij" class="buttons"/>
-			<input type="button" id="pause-game" value="Pauza" class="buttons"/>
+			<label for="level" style="display: none;">Ustaw poziom</label>
+			<input style="display: none;" type="text" id="level" name="level" value="10" size="2" class="controls" />
+			<span class="bold">Poziom</span><br/>
+			<span class="score" id="gameplayLevel">0</span>
+			<span class="bold">Wynik</span><br/>
+			<span class="score" id="points">0</span><br/>
+			<span class="bold">Skasowane linie</span><br/>
+			<span class="score" id="lines">0</span>
+			<input style="display: none;" type="button" id="start-game" value="Rozpocznij" class="buttons"/>
+			<input style="display: none;" type="button" id="pause-game" value="Pauza" class="buttons"/>
 		</fieldset>
-		
 		</div>
 	</div>
 	<div class="clearfloat"></div>
