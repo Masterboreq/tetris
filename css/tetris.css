@@ -5,27 +5,98 @@ body {
 	background-color: #aba;
 	overflow: hidden;
 	padding: 0%;
+	font-family: Verdana, Helvetica sans-serif;
 }
 #wrapper {
 	min-width: 800px;
-	width: 860px;
-	height: 640px;
+	width: 880px;
+	height: 670px;
 	margin: 0%;
 	padding: 0%;
 	border: 1px solid black;
 	overflow: hidden;
+	background: #fff url(../img/red-moscow.jpg) no-repeat;
+	background-size: cover;
+	background-position: 0px 0px;
 }
+
+#toolbar {
+	width: 100%;
+	height: 40px;
+	border: 1px solid black;
+}
+
+#tetris-logo {
+	float: left;
+	width: 108px;
+	height: 38px;
+	border: 1px solid orange;
+}
+
+.menu-item {
+	float: right;
+	width: 58px;
+	height: 38px;
+	border: 1px solid orange;
+}
+
 #gui-left, #vignette, #gui-right {
 	position: relative;
 	float: left;
 	top: 30px;
-	border: 3px dashed green;
 	width: 250px;
 	height: 480px;
-	border: none;
-	background: #fff;
+	background: none;
 }
+
+#gui-left {
+	width: 280px;
+	height: 450px;
+	border: 1px solid blue;
+	padding: 30px 10px 0px 0px
+}
+
+#histogram {
+	width: 98%;
+	height: 240px;
+	border: 0px solid green;
+	font-size: 12px;
+	margin-left: 5px;
+}
+
+.pile {
+	position: relative;
+	float: left;
+	width: 30px;
+	height: 100%;
+	background: #f2d;
+	margin-left: 4px;
+}
+
+.percentage {
+	display: block;
+	margin-bottom: 180%;
+	text-align: center;
+}
+
+.podium {
+	margin-top: 3px;
+	height: 20px;
+	text-align: center;
+}
+
+#y-axis, #y-podium {
+	width: 25px;
+	margin-left: 0px;
+	margin-right: 8px;
+	font-size: 10px;
+	background: none;
+	border-left: 2px solid #000;
+}
+
 #gui-right {
+	top: 32px;
+	width: 260px;
 	border: 1px solid blue;
 }
 
@@ -34,8 +105,8 @@ body {
 	height: 440px;
 	border: 0px solid #0ad;
 	position: absolute;
-	left: 300px;
-	top: 40px;
+	left: 340px;
+	top: 80px;
 	margin: 0%;
 	z-index: 1;
 }
@@ -43,19 +114,15 @@ body {
 #vignette {
 	top: 30px;
 	float: left;
-	width: 220px;
+	width: 300px;
 	height: 440px;
 	border: none;
 }
 
-#vignette {
-	width: 300px;
-	height: 440px;
-	background: none;
-}
 #wallpaper {
 	float: left;
-	background: #fff url(../img/babe.jpg) no-repeat -145px 0px;
+	background: url(../img/red-moscow.jpg) no-repeat -405px -82px;
+	background-size: 470%;
 	width: 220px;
 	height: 440px;
 	
@@ -103,7 +170,6 @@ div#well div div:first-child {
 	display: none;
 }
 
-
 .clearfloat {
 	clear: both;
 }
@@ -117,6 +183,18 @@ div#well div div:first-child {
 .controls {
 	width: 20px;
 	text-align: right;
+}
+.bold {
+	font-size: 21px;
+	font-weight: bold;
+	text-align: left;
+	display: block;
+}
+.score {
+	font-size: 36px;
+	font-weight: bold;
+	text-align: right;
+	display: block;
 }
 #overlay {
 	display: block;
@@ -153,11 +231,17 @@ fieldset#te {
 
 fieldset#monitor {
 	position: relative;
-	top: 60px;
+	top: 20px;
 	left: 10px;
-	width: 180px;
+	width: 200px;
 	height: auto;
-	background-color: #fff;
+	background-color: none;
+}
+#next-piece {
+	border: 2px solid rgba(255, 255, 255, .6);
+	border-radius: 5px;
+	width: 90px;
+	margin: 8px 0px 12px 50px;
 }
 
 legend {
