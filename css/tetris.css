@@ -1,29 +1,42 @@
 /*
 	css/tetris.css
 */
+.devred {
+	border: 1px dashed red;
+}
+.gui-pause {
+	/*Specjalna klasa o pustej definicji tylko na potrzeby JS*/
+}
 body {
-	background-color: #aba;
+	background-color: #222;
 	overflow: hidden;
 	padding: 0%;
 	font-family: Verdana, Helvetica sans-serif;
+	font-size: 12px;
+}
+a {
+	text-decoration: none;
+	color: #fff;
 }
 #wrapper {
 	min-width: 800px;
-	width: 880px;
-	height: 670px;
+	width: 900px;
+	height: 620px;
 	margin: 0%;
 	padding: 0%;
 	border: 1px solid black;
 	overflow: hidden;
-	background: #fff url(../img/red-moscow.jpg) no-repeat;
-	background-size: cover;
-	background-position: 0px 0px;
+	background: #fff url(../img/stbasil-1.jpg) no-repeat;
+	background-size: 120%;
+	background-position: -81px -81px;
 }
 
 #toolbar {
 	width: 100%;
 	height: 40px;
 	border: 1px solid black;
+	background: rgba(10,10,10, .85);
+	color: #fff;
 }
 
 #tetris-logo {
@@ -40,42 +53,65 @@ body {
 	border: 1px solid orange;
 }
 
+.menu-item a {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
 #gui-left, #vignette, #gui-right {
 	position: relative;
 	float: left;
 	top: 30px;
 	width: 250px;
 	height: 480px;
-	background: none;
+	background: rgba(255,255,255, .4);
+	border: none;
 }
 
 #gui-left {
+	margin-left: 10px;
 	width: 280px;
 	height: 450px;
-	border: 1px solid blue;
-	padding: 30px 10px 0px 0px
+	padding: 30px 10px 0px 10px;
 }
 
 #histogram {
-	width: 98%;
-	height: 240px;
-	border: 0px solid green;
+	width: 75%;
+	height: 180px;
 	font-size: 12px;
 	margin-left: 5px;
+	background: rgba(160,37,37, 1);
 }
 
 .pile {
 	position: relative;
 	float: left;
-	width: 30px;
+	width: 20px;
 	height: 100%;
-	background: #f2d;
+	background: none;
 	margin-left: 4px;
+}
+
+.negative {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	float: left;
+	background: rgba(160,37,37, 1);
+	z-index: 2;
+}
+
+.positive {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background: #222;
 }
 
 .percentage {
 	display: block;
-	margin-bottom: 180%;
+	margin-bottom: 30px;
 	text-align: center;
 }
 
@@ -97,7 +133,6 @@ body {
 #gui-right {
 	top: 32px;
 	width: 260px;
-	border: 1px solid blue;
 }
 
 #well {
@@ -105,8 +140,8 @@ body {
 	height: 440px;
 	border: 0px solid #0ad;
 	position: absolute;
-	left: 340px;
-	top: 80px;
+	left: 360px;
+	top: 81px;
 	margin: 0%;
 	z-index: 1;
 }
@@ -115,14 +150,14 @@ body {
 	top: 30px;
 	float: left;
 	width: 300px;
-	height: 440px;
+	height: 442px;
 	border: none;
 }
 
 #wallpaper {
 	float: left;
-	background: url(../img/red-moscow.jpg) no-repeat -405px -82px;
-	background-size: 470%;
+	/*background: url(../img/stbasil.jpg) no-repeat -120px -150px;*/
+	background-size: 220%;
 	width: 220px;
 	height: 440px;
 	
@@ -130,7 +165,7 @@ body {
 #left-bank, #right-bank, #bottom-bank {
 	position: relative;
 	float: left;
-	background: #0f0;
+	background: none;
 	height: 100%;
 	width: 40px;
 }
@@ -138,7 +173,7 @@ body {
 	float: right;
 }
 #bottom-bank {
-	background: #336578;
+	background: rgba(255,255,255, .4);
 	width: 100%;
 	height: 40px;
 }
@@ -185,17 +220,39 @@ div#well div div:first-child {
 	text-align: right;
 }
 .bold {
-	font-size: 21px;
+	font-size: 18px;
 	font-weight: bold;
 	text-align: left;
 	display: block;
+	margin: 10px 0px 0px 0px;
 }
 .score {
-	font-size: 36px;
+	font-size: 24px;
 	font-weight: bold;
 	text-align: right;
 	display: block;
+	background: rgba(160,37,37, .72);
+	margin: 0px;
+	color: #ffd255;
+	padding: 0px 5px;
+	overflow: hidden;
 }
+
+#footer {
+	width: 99.9%;
+	height: 40px;
+	border: 0px solid red;
+	margin-top: 60px;
+	padding: 0%;
+	background: rgba(255,255,255, .4);
+}
+
+#footer ul li {
+	display: inline;
+	float: right;
+	margin-left: 20px;
+}
+
 #overlay {
 	display: block;
 	position: absolute;
