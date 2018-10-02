@@ -13,9 +13,11 @@
 	<div id="wrapper">
 		<div id="toolbar">
 			<div id="tetris-logo">Logo</div>
-			<div class="menu-item">Hi-Scores</div>
-			<div class="menu-item">Manual</div>
-			<div class="menu-item">Extras</div>
+			<div class="menu-item"><a class="gui-pause" href="#lang">Lang</a></div>
+			<div class="menu-item"><a class="gui-pause" href="#hiscores">Hi-Scores</a></div>
+			<div class="menu-item"><a class="gui-pause" href="#manual">Manual</a></div>
+			<div class="menu-item"><a class="gui-pause" href="#controls">Controls</a></div>
+			<div class="menu-item"><a class="gui-pause" href="#">About Tetris</a></div>
 			<div class="clearfloat"></div>
 		</div>
 		<div id="well">
@@ -435,7 +437,7 @@
 			<span class="bold">Hi-Score</span>
 			<span class="score">50000</span>
 			<span class="bold">Histogram klocków</span>
-			<div id="histogram">
+			<div id="histogram" class="devred">
 				<div class="pile" id="y-axis">
 					<span class="percentage">100%</span>
 					<span class="percentage">75%</span>
@@ -444,25 +446,39 @@
 					<span class="percentage">0%</span>
 				</div>
 				<div class="pile">
-					<span class="percentage">0</span>
+					<div id="neg0" class="negative" style="height: 100%"></div>
+					<div class="positive"><span class="percentage">0</span></div>
+					<div class="clearfloat"></div>
 				</div>
 				<div class="pile">
-					<span class="percentage">0</span>
+					<div id="neg1" class="negative" style="height: 100%"></div>
+					<div class="positive"><span class="percentage">0</span></div>
+					<div class="clearfloat"></div>
 				</div>
 				<div class="pile">
-					<span class="percentage">0</span>
+					<div id="neg2" class="negative" style="height: 100%"></div>
+					<div class="positive"><span class="percentage">0</span></div>
+					<div class="clearfloat"></div>
 				</div>
 				<div class="pile">
-					<span class="percentage">0</span>
+					<div id="neg3" class="negative" style="height: 100%"></div>
+					<div class="positive"><span class="percentage">0</span></div>
+					<div class="clearfloat"></div>
 				</div>
 				<div class="pile">
-					<span class="percentage">0</span>
+					<div id="neg4" class="negative" style="height: 100%"></div>
+					<div class="positive"><span class="percentage">0</span></div>
+					<div class="clearfloat"></div>
 				</div>
 				<div class="pile">
-					<span class="percentage">0</span>
+					<div id="neg5" class="negative" style="height: 100%"></div>
+					<div class="positive"><span class="percentage">0</span></div>
+					<div class="clearfloat"></div>
 				</div>
 				<div class="pile">
-					<span class="percentage">0</span>
+					<div id="neg6" class="negative" style="height: 100%"></div>
+					<div class="positive"><span class="percentage">0</span></div>
+					<div class="clearfloat"></div>
 				</div>
 				<div id="y-podium" class="pile podium">
 					<span class="percentage">0</span>
@@ -488,6 +504,7 @@
 				<div class="pile podium">
 					<span class="percentage" id="k6">0</span>
 				</div>
+				<div class="clearfloat"></div>
 			</div>
 		</div>
 		<div id="vignette">
@@ -495,7 +512,7 @@
 			<div id="wallpaper"></div>
 			<div id="right-bank"></div>
 			<div class="clearfloat"></div>
-			<div id="bottom-bank"><span style="font-size: 18px"></span></div>
+			<div id="bottom-bank" class="devred"><span style="font-size: 18px"></span></div>
 		</div>
 		<div id="gui-right">
 			<fieldset id="te">
@@ -542,15 +559,24 @@
 			</div>
 			<label for="level" style="display: none;">Ustaw poziom</label>
 			<input style="display: none;" type="text" id="level" name="level" value="10" size="2" class="controls" />
-			<span class="bold">Poziom</span><br/>
+			<span class="bold">Poziom</span>
 			<span class="score" id="gameplayLevel">0</span>
-			<span class="bold">Wynik</span><br/>
-			<span class="score" id="points">0</span><br/>
-			<span class="bold">Skasowane linie</span><br/>
+			<span class="bold">Wynik</span>
+			<span class="score" id="points">0</span>
+			<span class="bold">Linie</span>
 			<span class="score" id="lines">0</span>
 			<input style="display: none;" type="button" id="start-game" value="Rozpocznij" class="buttons"/>
 			<input style="display: none;" type="button" id="pause-game" value="Pauza" class="buttons"/>
-		</fieldset>
+		</fieldset>	
+		</div>
+		<div class="clearfloat"></div>
+		<div id="footer">
+		<span style="float: left">&copy;Boreq.com 2018</span>
+			<ul>
+				<li><a class="gui-pause" href="#">O aplikacji</a></li>
+				<li><a class="gui-pause" href="#">Przetłumacz na swój język</a></li>
+				<li><a class="gui-pause" href="#">Repozytorium</a></li>
+			</ul>
 		</div>
 	</div>
 	<div class="clearfloat"></div>
