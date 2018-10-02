@@ -24,7 +24,23 @@ var oEvent = window.event,
 	oLines = document.getElementById("lines"),
 	oStartGameButton = document.getElementById("start-game"),
 	oPauseGameButton = document.getElementById("pause-game"),
+
+	/* ### Elementy GUI ### */
+	oOverlay = document.getElementById("overlay"),
+	oTicker = document.getElementById("ticker"),
+	aGUIhrefs = document.getElementsByClassName("gui-pause"),
+	//TODO: przypisać kontolkom obsługę zdarzeń (klik) i skrót klawiaturowy
 	
+	/* ### Słupki histogramy ### */
+	oNegativePile0 = document.getElementById("neg0"), 
+	oNegativePile1 = document.getElementById("neg1"), 
+	oNegativePile2 = document.getElementById("neg2"), 
+	oNegativePile3 = document.getElementById("neg3"), 
+	oNegativePile4 = document.getElementById("neg4"), 
+	oNegativePile5 = document.getElementById("neg5"), 
+	oNegativePile6 = document.getElementById("neg6"), 
+		
+	/* ### Etykietki słupków histogramu ### */
 	oK0 = document.getElementById("k0"),
 	oK1 = document.getElementById("k1"),
 	oK2 = document.getElementById("k2"),
@@ -32,10 +48,6 @@ var oEvent = window.event,
 	oK4 = document.getElementById("k4"),
 	oK5 = document.getElementById("k5"),
 	oK6 = document.getElementById("k6"),
-	
-	/* ### Elementy GUI ### */
-	oOverlay = document.getElementById("overlay"),
-	oTicker = document.getElementById("ticker"),
 	
 	aGameImplementationTopLeft = [0,5], //2,7
 	/*
@@ -289,7 +301,8 @@ var oEvent = window.event,
 	aGamePrompts = [
 		"Pauza",
 		"Koniec gry",
-		"Naciśnij spację, aby rozpocząć grę!"
+		"Naciśnij spację, aby rozpocząć grę!",
+		"Czy chcesz zakończyć grę?"
 	],
 	
 	aEndGamePromts = [
@@ -556,7 +569,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 			//wyliczanie częstotliwości występowania danego symbolu
 			iSymbolsIndex = this.elements.length;
 			do {
-				freq = this.quantity[--iSymbolsIndex]/iLength;
+				freq = this.quantity[--iSymbolsIndex]/this.count;
 				this.frequency[iSymbolsIndex] = freq;
 				
 			}
@@ -1153,14 +1166,36 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		}
 		while(++r<=3);
 		
-		oLines.firstChild.nodeValue = iRowCounter; //pierwotnie było ba końcu collapse()
+		oLines.firstChild.nodeValue = iRowCounter; //pierwotnie było na końcu collapse()
+		
+		var tempPerc = 0;
 		oK0.firstChild.nodeValue = histogram.quantity[0];
+		tempPerc = histogram.frequency[0]*100;
+		oNegativePile0.style.height = (100-tempPerc)+"%";
+		
 		oK1.firstChild.nodeValue = histogram.quantity[1];
+		tempPerc = histogram.frequency[1]*100;
+		oNegativePile1.style.height = (100-tempPerc)+"%";
+		
 		oK2.firstChild.nodeValue = histogram.quantity[2];
+		tempPerc = histogram.frequency[2]*100;;
+		oNegativePile2.style.height = (100-tempPerc)+"%";
+		
 		oK3.firstChild.nodeValue = histogram.quantity[3];
+		tempPerc = histogram.frequency[3]*100;
+		oNegativePile3.style.height = (100-tempPerc)+"%";
+		
 		oK4.firstChild.nodeValue = histogram.quantity[4];
+		tempPerc = histogram.frequency[4]*100;
+		oNegativePile4.style.height = (100-tempPerc)+"%";
+		
 		oK5.firstChild.nodeValue = histogram.quantity[5];
+		tempPerc = histogram.frequency[5]*100;
+		oNegativePile5.style.height = (100-tempPerc)+"%";
+		
 		oK6.firstChild.nodeValue = histogram.quantity[6];
+		tempPerc = histogram.frequency[6]*100;
+		oNegativePile6.style.height = (100-tempPerc)+"%";
 		return;
 	},
 	collapse = function() {
@@ -1298,6 +1333,16 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		}
 		return;
 	},
+	simplePrompt = function() {
+		// NIE DZIAŁA! TODO!
+		//prototyp funkcji odpowiedzialnej za reakcję na odświeżenie strony
+		oOverlay.style.display = "block";
+		oWell.style.display = "none";
+		oTicker.style.display = "block";
+		oTicker.firstChild.nodeValue = aGamePrompts[3];
+		console.log(aGamePrompts[3]);
+		return;
+	},
 	restart = function() {
 		//TODO: prawdopodobnie do integrowania w f-cji start()
 		//UWAGA! Ta funkcja na razie NIC nie robi!
@@ -1407,6 +1452,7 @@ oTest7.value = oTestEnvironment.scenarios[6][0]; //w ten sposób także działa
 //TODO: funkcja init() musi odpalić zanim wylosuje się pierwszy klocek, bo inaczej pierwszy kock zawsze będzie klockiem O
 
 document.addEventListener("keydown", keyboardHandler, true);
+window.addEventListener("unload", simplePrompt, false);
 oTest1.addEventListener("click", loadInvaders, true);
 oTest2.addEventListener("click", loadPacman, true);
 oTest3.addEventListener("click", loadET, true);
@@ -1414,5 +1460,8 @@ oTest4.addEventListener("click", loadSuperMario, true);
 oTest5.addEventListener("click", loadPong, true);
 oTest6.addEventListener("click", loadSecretBox, true);
 oTest7.addEventListener("click", loadQuake, true);
+
+//TODO: wyrafinować to, dopisać funkcję obsługi zdarzenia, wyjąć obsługę rysowania GUI z togglePlay() i włożyć do nowej funkcji
+aGUIhrefs[0].addEventListener("click", togglePlay, true);
 
 oStartGameButton.addEventListener("click", start, true);
