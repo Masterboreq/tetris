@@ -22,14 +22,16 @@ var oEvent = window.event,
 	oGameplayLevel = document.getElementById("gameplayLevel"),
 	oPoints = document.getElementById("points"),
 	oLines = document.getElementById("lines"),
-	oStartGameButton = document.getElementById("start-game"),
 	oPauseGameButton = document.getElementById("pause-game"),
 
 	/* ### Elementy GUI ### */
 	oOverlay = document.getElementById("overlay"),
 	oTicker = document.getElementById("ticker"),
+	oInitScreen = document.getElementById("init-screen"),
+	oStartGameButton = document.getElementById("start-game"),
 	aGUIhrefs = document.getElementsByClassName("gui-pause"),
-	//TODO: przypisać kontolkom obsługę zdarzeń (klik) i skrót klawiaturowy
+	
+	//TODO: przypisać kontrolkom obsługę zdarzeń (klik) i skrót klawiaturowy
 	
 	/* ### Słupki histogramy ### */
 	oNegativePile0 = document.getElementById("neg0"), 
@@ -648,9 +650,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		}
 		iActualLevel = Math.max(iInitialLevel, iActualLevel);
 		//TODO: to całe jest do poprawy, gdy będzie już działać obsługa local storage.
-		
-		
-		
+	
 		drawPiece(); //losuj klocek inicjujący grę
 		bPlay = true; //togglePlay();
 		return;
@@ -660,7 +660,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		bRestarted = true; // podły hack na zmuszenie klocka do startu od najwyższego miejsca w studzience!
 		oOverlay.style.display = "none";
 		oTicker.style.display = "none";
-		oOverlay.style.backgroundColor = "rgba(0, 0, 0, .0)"; //.95
+		oOverlay.style.backgroundColor = "rgba(0, 0, 0, .85)"; //.95
 		main(); //rozpoczęcie głównej pętli rozgrywki
 		return;
 	},
@@ -911,6 +911,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		/* TYLKO DLA DEBUGGERA!
 			Funkcja pozwala wybrać rodzaj pojawiającego się klocka.
 			Tylko dla klawiatury
+			TODO: usunąć w wersji produkcyjnej!
 		*/
 		piece = oPieceO; //zabezpieczenie na wypadek braku przekazanego argumentu  lub przekazania błędnego
 		switch(oEvent.key) {
@@ -1269,7 +1270,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 				if(cellState==1) {
 					oRow.setAttribute("occupied",1);
 					//TODO: tutaj wstawić kod odpowiedzialny za alternatywne kolorowanie segmentów
-					oRow.style.backgroundColor = "rgba(255,255,255,0)";
+					oRow.style.backgroundColor = "rgba(255,255,255,.5)";
 					//console.log("Segment w Y:"+offsetY+"; X:"+offsetX+" został dobudowany!");
 					if(++aRowCompleteness[offsetY]==10) {
 						//aktualizacja ilości segmentów w danym rzędzie studzienki z jednoczesnym sprawdzeniem kompletności wypełnienia rzędu
@@ -1291,6 +1292,38 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		//console.log("Orzeł wylądował!");
 		return;
 	},
+	controlGUIPrompts = function(action) {
+		/*
+			Funkcja obsługi zachowania GUI dla takich zdarzeń i stanów gry jak pauza, wybór języka GUI, wybór tematu GUI itp.
+		*/
+		switch(action) {
+			case "init": ; //ekran powitalny gry zaraz po intrze (TODO: intro gry)
+			break;
+			
+			case "newgame": ; //stan gry: nowa runda rozgrywki (pierwsza lub kolejna)
+			break;
+			
+			case "pause": //grę spauzowano
+				oOverlay.style.display = "block";
+				oWell.style.display = "none";
+				oTicker.style.display = "block";
+				oTicker.firstChild.nodeValue = aGamePrompts[0];
+			break;
+			
+			case "resume": ; //grę wznowiono po pauzie
+				oOverlay.style.display = "none";
+				oWell.style.display = "block";
+				oTicker.style.display = "none";
+			break;
+			
+			case "endgame": ; //gra się zakończyła
+			break;;
+			
+			case "storehiscore": ; //wpisz się na listę najlepszych wyników
+			break;
+		}
+		return;
+	},
 	
 	togglePlay = function() {
 		/*
@@ -1300,18 +1333,13 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 			//jeśli rozgrywka trwa, pauzuj ją!
 			clearInterval(iGravityInterval);
 			takeWellSnapshot();
-			oOverlay.style.display = "block";
-			oWell.style.display = "none";
-			oTicker.style.display = "block";
-			oTicker.firstChild.nodeValue = aGamePrompts[0];
+			controlGUIPrompts("pause");
 			console.log("Pauza!");
 			bPlay = false;
 		}
 		else {
 			//jeśli spauzowano rozgrywkę, wznów ją!
-			oOverlay.style.display = "none";
-			oWell.style.display = "block";
-			oTicker.style.display = "none";
+			controlGUIPrompts("resume");
 			main();
 			console.log("Grę wznowiono!");
 			bPlay = true;
@@ -1333,7 +1361,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		}
 		return;
 	},
-	simplePrompt = function() {
+	TODOsimplePrompt = function() {
 		// NIE DZIAŁA! TODO!
 		//prototyp funkcji odpowiedzialnej za reakcję na odświeżenie strony
 		oOverlay.style.display = "block";
@@ -1449,10 +1477,9 @@ oTest7.value = oTestEnvironment.scenarios[6][0]; //w ten sposób także działa
 //loadTest(6);
 //initGame();
 //drawPiece(); //losuj klocek inicjujący grę
-//TODO: funkcja init() musi odpalić zanim wylosuje się pierwszy klocek, bo inaczej pierwszy kock zawsze będzie klockiem O
 
 document.addEventListener("keydown", keyboardHandler, true);
-window.addEventListener("unload", simplePrompt, false);
+//window.addEventListener("unload", simplePrompt, false);
 oTest1.addEventListener("click", loadInvaders, true);
 oTest2.addEventListener("click", loadPacman, true);
 oTest3.addEventListener("click", loadET, true);
@@ -1461,7 +1488,7 @@ oTest5.addEventListener("click", loadPong, true);
 oTest6.addEventListener("click", loadSecretBox, true);
 oTest7.addEventListener("click", loadQuake, true);
 
-//TODO: wyrafinować to, dopisać funkcję obsługi zdarzenia, wyjąć obsługę rysowania GUI z togglePlay() i włożyć do nowej funkcji
+
 aGUIhrefs[0].addEventListener("click", togglePlay, true);
 
 oStartGameButton.addEventListener("click", start, true);
