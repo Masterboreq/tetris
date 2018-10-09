@@ -1,22 +1,24 @@
-/*
+/* 
 	css/tetris.css
+	Author: Marcin Borkowicz 2018
+	Package: Classic Tetris
+	Codebase: github.com/Masterboreq/tetris
+	Website: boreq.com/tetris
+	Comments: application common stylesheet file
 */
-.devred {
-	border: 1px dashed red;
-}
 .gui-pause {
 	/*Specjalna klasa o pustej definicji tylko na potrzeby JS*/
 }
+
+/*
+	Dodatkowe właściwości elementów, klas i selektorów uzupełnia dodatkowy plik CSS aktualnie załadowanego tematu.
+*/
 body {
-	background-color: #222;
 	overflow: hidden;
 	padding: 0%;
-	font-family: Verdana, Helvetica sans-serif;
-	font-size: 12px;
 }
 a {
 	text-decoration: none;
-	color: #fff;
 }
 #wrapper {
 	min-width: 800px;
@@ -24,33 +26,24 @@ a {
 	height: 620px;
 	margin: 0%;
 	padding: 0%;
-	border: 1px solid black;
 	overflow: hidden;
-	background: #fff url(../img/stbasil-1.jpg) no-repeat;
-	background-size: 120%;
-	background-position: -81px -81px;
 }
 
 #toolbar {
 	width: 100%;
 	height: 40px;
-	border: 1px solid black;
-	background: rgba(10,10,10, .85);
-	color: #fff;
 }
 
 #tetris-logo {
 	float: left;
 	width: 108px;
 	height: 38px;
-	border: 1px solid orange;
 }
 
 .menu-item {
 	float: right;
 	width: 58px;
 	height: 38px;
-	border: 1px solid orange;
 }
 
 .menu-item a {
@@ -59,18 +52,22 @@ a {
 	height: 100%;
 }
 
+#gamefield-wrapper {
+	position: relative;
+	top: 30px;
+	margin-left: 10px;
+	width: 860px;
+}
+
 #gui-left, #vignette, #gui-right {
 	position: relative;
 	float: left;
-	top: 30px;
+	top: 0px;
 	width: 250px;
 	height: 480px;
-	background: rgba(255,255,255, .4);
-	border: none;
 }
 
 #gui-left {
-	margin-left: 10px;
 	width: 280px;
 	height: 450px;
 	padding: 30px 10px 0px 10px;
@@ -81,7 +78,6 @@ a {
 	height: 180px;
 	font-size: 12px;
 	margin-left: 5px;
-	background: rgba(160,37,37, 1);
 }
 
 .pile {
@@ -106,7 +102,6 @@ a {
 	position: relative;
 	width: 100%;
 	height: 100%;
-	background: #222;
 }
 
 .percentage {
@@ -126,19 +121,16 @@ a {
 	margin-left: 0px;
 	margin-right: 8px;
 	font-size: 10px;
-	background: none;
-	border-left: 2px solid #000;
 }
 
 #gui-right {
-	top: 32px;
+	top: 0px;
 	width: 260px;
 }
 
 #well {
 	width: 220px;
 	height: 440px;
-	border: 0px solid #0ad;
 	position: absolute;
 	left: 360px;
 	top: 81px;
@@ -147,17 +139,14 @@ a {
 }
 
 #vignette {
-	top: 30px;
+	top: 0px;
 	float: left;
 	width: 300px;
-	height: 442px;
-	border: none;
+	height: 440px;
 }
 
 #wallpaper {
 	float: left;
-	/*background: url(../img/stbasil.jpg) no-repeat -120px -150px;*/
-	background-size: 220%;
 	width: 220px;
 	height: 440px;
 	
@@ -165,36 +154,30 @@ a {
 #left-bank, #right-bank, #bottom-bank {
 	position: relative;
 	float: left;
-	background: none;
 	height: 100%;
 	width: 40px;
 }
 #right-bank {
-	float: right;
+	position: relative;
+	top: 0px;
+	float: left;
 }
 #bottom-bank {
-	background: rgba(255,255,255, .4);
 	width: 100%;
 	height: 40px;
 }
 .cell {
 	height: 20px;
 	width: 20px;
-	border: 1px solid rgba(255,255,255, .2);
-	background: none;
 	float: left;
-	font: 12px sans-serif;
-	text-align: right;
-	line-height: 20px;
 }
 
 .bumper {
-	background-color: #8ecc15 !important;
-	display: none;
+	/* Specjalnie pozostawione puste */
 }
 
 .row {
-	width: 310px dashed green;
+	width: 310px;
 }
 
 #row-0, #row-22, #row-23 {
@@ -220,20 +203,12 @@ div#well div div:first-child {
 	text-align: right;
 }
 .bold {
-	font-size: 18px;
-	font-weight: bold;
-	text-align: left;
-	display: block;
-	margin: 10px 0px 0px 0px;
+	/* Specjalnie pozostawione puste */
 }
 .score {
-	font-size: 24px;
-	font-weight: bold;
 	text-align: right;
 	display: block;
-	background: rgba(160,37,37, .72);
 	margin: 0px;
-	color: #ffd255;
 	padding: 0px 5px;
 	overflow: hidden;
 }
@@ -241,10 +216,8 @@ div#well div div:first-child {
 #footer {
 	width: 99.9%;
 	height: 40px;
-	border: 0px solid red;
 	margin-top: 60px;
 	padding: 0%;
-	background: rgba(255,255,255, .4);
 }
 
 #footer ul li {
@@ -258,23 +231,37 @@ div#well div div:first-child {
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	background: rgba(0, 0, 0, .95);
 	width: 100%;
 	height: 100%;
+	z-index: 10;
 }
 #ticker {
-	position: absolute;
+	position: relative;
 	top: 215px;
-	left: 284px;
+	margin: 0% auto;
 	width: 250px;
 	height: 50px;
-	border: 1px solid #ddd;
-	background: rgba(255,255,255, .95);
 	text-align: center;
-	font-family: sans-serif;
-	font-size: 36px;
 	padding: 0%;
 	z-index: 10;
+}
+
+#init-screen {
+	display: block;
+	position: relative;
+	width: 250px;
+	height: 250px;
+	top: 50px;
+	margin: 0% auto;
+}
+#end-screen {
+	display: block;
+	position: relative;
+	width: 250px;
+	height: 250px;
+	top: -20px;
+	left: 10px;
+	margin: 0% auto;
 }
 
 fieldset#te {
@@ -292,39 +279,12 @@ fieldset#monitor {
 	left: 10px;
 	width: 200px;
 	height: auto;
-	background-color: none;
 }
 #next-piece {
-	border: 2px solid rgba(255, 255, 255, .6);
-	border-radius: 5px;
 	width: 90px;
 	margin: 8px 0px 12px 50px;
 }
 
 legend {
-	background-color: #000;
-	color: #fff;
 	padding: 3px 6px;
-}
-
-#spawn-button {
-	right: 50px;
-	top: 50px;
-}
-
-#left-button {
-	width: 40px;
-	right: 180px;
-	top: 80px;
-}
-
-#right-button {
-	width: 40px;
-	right: 5px;
-	top: 80px;
-}
-
-#fall-button {
-	right: 50px;
-	top: 80px;
 }

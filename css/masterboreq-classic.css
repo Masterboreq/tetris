@@ -1,0 +1,239 @@
+/* 
+	css/masterboreq-classic.css
+	Author: Marcin Borkowicz 2018
+	Package: Classic Tetris
+	Codebase: github.com/Masterboreq/tetris
+	Website: boreq.com/tetris
+*/
+body {
+	background-color: #222;
+	font-family: Verdana, Helvetica sans-serif;
+	font-size: 12px;
+}
+
+a {
+	color: #fff;
+}
+#wrapper {
+	border: 1px solid black;
+	background: #fff url(../img/stbasil-1.jpg) no-repeat;
+	background-size: 120%;
+	background-position: -81px -81px;
+}
+
+#toolbar, #footer {
+	border: 1px solid black;
+	background: rgba(10,10,10, .85);
+	color: #fff;
+}
+
+#tetris-logo {
+	border: 1px solid orange;
+}
+
+.menu-item {
+	border: 1px solid orange;
+}
+
+.menu-item a {
+	/* Specjalnie pozostawione puste */
+}
+
+#gamefield-wrapper {
+	background: rgba(255,255,255, .6);
+}
+
+#gui-left, #vignette, #gui-right {
+	/*background: rgba(255,255,255, .4);*/
+	border: none;
+}
+
+#gui-left {
+	/* Specjalnie pozostawione puste */
+}
+
+#histogram {
+	background: rgba(160,37,37, 1);
+}
+
+.pile {
+	position: relative;
+	float: left;
+	width: 20px;
+	height: 100%;
+	background: none;
+	margin-left: 4px;
+}
+
+.negative {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	float: left;
+	background: rgba(160,37,37, 1);
+	z-index: 2;
+}
+
+.positive {
+	background: #222;
+}
+
+.percentage {
+	display: block;
+	margin-bottom: 30px;
+	text-align: center;
+}
+
+.podium {
+	margin-top: 3px;
+	height: 20px;
+	text-align: center;
+}
+
+#y-axis, #y-podium {
+	background: none;
+	border-left: 2px solid #000;
+}
+
+#gui-right {
+	/* Specjalnie pozostawione puste */
+	
+}
+
+#well {
+	border: 0px solid #0ad;
+}
+
+#vignette {
+	border: none;
+}
+
+#wallpaper {
+	background: url(../img/babe.jpg) no-repeat -120px -150px;
+	background-size: 220%;	
+}
+#left-bank, #right-bank, #bottom-bank {
+	/* Specjalnie pozostawione puste */
+}
+#right-bank {
+	
+	/* Specjalnie pozostawione puste */
+}
+#bottom-bank {
+	background: rgba(255,255,255, .4);
+}
+.cell {
+	border: 1px solid rgba(255,255,255, .2);
+	background: none;
+	font: 12px sans-serif;
+	text-align: right;
+	line-height: 20px;
+}
+
+.bumper {
+	background-color: #8ecc15 !important;
+	display: none;
+}
+
+.row {
+	/* Specjalnie pozostawione puste */
+}
+
+#row-0, #row-22, #row-23 {
+	/* Specjalnie pozostawione puste */
+}
+
+div#well div div:first-child {
+	/* Specjalnie pozostawione puste */
+}
+
+.clearfloat {
+	/* Specjalnie pozostawione puste */
+}
+
+.buttons {
+	/* Specjalnie pozostawione puste */
+}
+
+.controls {
+	/* Specjalnie pozostawione puste */
+}
+.bold {
+	font-size: 18px;
+	font-weight: bold;
+	text-align: left;
+	display: block;
+	margin: 10px 0px 0px 0px;
+}
+.score {
+	font-size: 24px;
+	font-weight: bold;
+	background: rgba(160,37,37, .72);
+	color: #ffd255;
+}
+
+#footer {
+	/* Specjalnie pozostawione puste */
+}
+
+#footer ul li {
+	/* Specjalnie pozostawione puste */
+}
+
+#overlay {
+	background: rgba(0, 0, 0, .95);
+}
+#ticker {
+	border: 1px solid #000;
+	background: rgba(255,255,255, .95);
+	font-family: sans-serif;
+	font-size: 36px;
+}
+
+#init-screen {
+	background-color: #900;
+}
+
+#end-screen {
+	background-color: #050;
+}
+
+fieldset#te {
+	/* Specjalnie pozostawione puste */
+}
+
+fieldset#monitor {
+	background-color: none;
+	border: none;
+}
+
+#next-piece {
+	border: 2px solid rgba(255, 255, 255, .6);
+	border-radius: 5px;
+}
+
+legend {
+	background-color: #000;
+	color: #fff;
+}
+/*
+#spawn-button {
+}
+
+#left-button {
+	width: 40px;
+	right: 180px;
+	top: 80px;
+}
+
+#right-button {
+	width: 40px;
+	right: 5px;
+	top: 80px;
+}
+
+#fall-button {
+	right: 50px;
+	top: 80px;
+}
+*/

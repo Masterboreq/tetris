@@ -1,0 +1,13 @@
+/* 
+	dev.css
+	Author: Marcin Borkowicz 2018
+	Package: -
+	Codebase: -
+	Website: boreq.com
+*/
+.devred {
+	border: 1px dashed red;
+}
+.devgreen {
+	background-color: green;
+}
