@@ -28,6 +28,8 @@ var oEvent = window.event,
 	oOverlay = document.getElementById("overlay"),
 	oTicker = document.getElementById("ticker"),
 	oInitScreen = document.getElementById("init-screen"),
+	oPauseScreen  = document.getElementById("pause-screen"),
+	oEndScreen = document.getElementById("end-screen"),
 	oStartGameButton = document.getElementById("start-game"),
 	aGUIhrefs = document.getElementsByClassName("gui-pause"),
 	
@@ -300,21 +302,11 @@ var oEvent = window.event,
 	/*
 		Flaga stanu rozgrywki: trwająca gra (TRUE); pauza (FALSE)
 	*/
-	aGamePrompts = [
-		"Pauza",
-		"Koniec gry",
-		"Naciśnij spację, aby rozpocząć grę!",
-		"Czy chcesz zakończyć grę?"
-	],
 	
-	aEndGamePromts = [
-		"Brawo! Mocne 2/10, hahaha!",
-		"Nie no! Tak złej gry to dawno nie widziałem!",
-		"Twój debiut? Nie?! No cóż...",
-		"Tak, tak - nie każdy może być mistrzem. Tobie to nie grozi",
-		"Spoko - następna gra pójdzie ci jeszcze gorzej, ale się nie zrażaj, hahaha!"
-	],
-	
+	/*
+		aGamePrompts oraz aEndGamePromts przeniesiono do pliku *.lang.js
+	*/
+		
 	iTrialOrientation = null,
 	/* iTrialOrientation (docelowo liczba całkowita) wskazuje PROPONOWANĄ nową orientację aktualnie spadającego klocka. Zmienna ustawiana poprzez funkcję flipPiece().
 	*/
@@ -658,19 +650,25 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 	start = function() {
 		initGame(); //reset środowiska rozgrywki
 		bRestarted = true; // podły hack na zmuszenie klocka do startu od najwyższego miejsca w studzience!
+		/*
+		Patrz: końcówka skryptu: controlGUIPrompts("init");
 		oOverlay.style.display = "none";
 		oTicker.style.display = "none";
 		oOverlay.style.backgroundColor = "rgba(0, 0, 0, .85)"; //.95
+		*/
+		controlGUIPrompts("resume")
 		main(); //rozpoczęcie głównej pętli rozgrywki
 		return;
 	},
 	takeWellSnapshot = function() {
 		/*
+		WERSJA ROZWOJOWA
 		 Funkcja, w momencie wywołania, zachowuje stan obiektu oWell (studzienki) w Local Storage. Funkcję wywołują następujące zdarzenia:
 			- spauzowanie gry,
-			- wywołanie zdarzenia odświeżenia strony przez użytkownika przeglądarki.
+			- TODO: wywołanie zdarzenia odświeżenia strony przez użytkownika przeglądarki.
 		*/
-		var snapshot = JSON.stringify(oRows);
+		var snapshot = JSON.stringify(oRows);/*
+			TODO: NIE DZIAŁA POPRAWNIE! Ciąg znaków serializowanego obiektu oRows nijak ma się do oryginału!*/
 		oLocalStorage.setItem("wellState", snapshot);
 		return;
 	},
@@ -754,17 +752,11 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 			clearInterval(iGravityInterval);
 			console.log("Game over!");
 			s = Math.ceil((Math.random()*1000))%5;
-			//prompt = aEndGamePromts[s];
-			//alert(prompt);
 			/*TODO: zachowaj stan gry:
 			 - zaawnsowanie poziomu osiągnięte przez gracza w grze
 			 - pozwól wpisać graczowi swoje inicjały w tabeli Hi-Score
 			 */
-			oOverlay.style.display = "block";
-			oOverlay.style.backgroundColor = "rgba(255, 255, 255, .5)";
-			//oWell.style.display = "none";
-			oTicker.style.display = "block";
-			oTicker.firstChild.nodeValue = aGamePrompts[1];
+			controlGUIPrompts("endgame");
 			bRestarted = true;
 			return;
 		}
@@ -1296,28 +1288,51 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		/*
 			Funkcja obsługi zachowania GUI dla takich zdarzeń i stanów gry jak pauza, wybór języka GUI, wybór tematu GUI itp.
 		*/
+		
+		// ### Czyszczenie stanu ekranów
+		oInitScreen.setAttribute("mode", "off");
+		oPauseScreen.setAttribute("mode", "off");
+		oEndScreen.setAttribute("mode", "off");
+		
 		switch(action) {
 			case "init": ; //ekran powitalny gry zaraz po intrze (TODO: intro gry)
+				oOverlay.setAttribute("mode", "on");
+				oTicker.firstChild.nodeValue = aGamePrompts[2];
+				oTicker.setAttribute("mode", "on");
+				oInitScreen.setAttribute("mode", "on");
 			break;
 			
 			case "newgame": ; //stan gry: nowa runda rozgrywki (pierwsza lub kolejna)
+			//TODO: zaprojektować przepływ sterowania od stanu "init"/"endgame" do stanu "newgame"
+				oOverlay.setAttribute("mode", "off");
+				oTicker.setAttribute("mode", "off");
+				oInitScreen.setAttribute("mode", "off");
 			break;
 			
 			case "pause": //grę spauzowano
-				oOverlay.style.display = "block";
 				oWell.style.display = "none";
-				oTicker.style.display = "block";
+				oOverlay.setAttribute("mode", "on");
 				oTicker.firstChild.nodeValue = aGamePrompts[0];
+				oTicker.setAttribute("mode", "on");
+				oPauseScreen.setAttribute("mode", "on");
 			break;
 			
 			case "resume": ; //grę wznowiono po pauzie
-				oOverlay.style.display = "none";
 				oWell.style.display = "block";
-				oTicker.style.display = "none";
+				oOverlay.setAttribute("mode", "off");
+				oTicker.setAttribute("mode", "off");
+				oPauseScreen.setAttribute("mode", "off");
 			break;
 			
 			case "endgame": ; //gra się zakończyła
-			break;;
+				//oOverlay.style.display = "block";
+				//oOverlay.style.backgroundColor = "rgba(255, 255, 255, .5)";
+				//oTicker.style.display = "block";
+				oOverlay.setAttribute("mode", "on");
+				oTicker.firstChild.nodeValue = aGamePrompts[1];
+				oTicker.setAttribute("mode", "on");
+				oEndScreen.setAttribute("mode", "on");
+			break;
 			
 			case "storehiscore": ; //wpisz się na listę najlepszych wyników
 			break;
@@ -1332,7 +1347,10 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		if(bPlay) {
 			//jeśli rozgrywka trwa, pauzuj ją!
 			clearInterval(iGravityInterval);
-			takeWellSnapshot();
+			/* Następujace funkcje zostaną użyte, gdy będą działać poprawnie:
+				takeWellSnapshot(); 
+				toggleWell(true);
+			*/
 			controlGUIPrompts("pause");
 			console.log("Pauza!");
 			bPlay = false;
@@ -1340,6 +1358,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		else {
 			//jeśli spauzowano rozgrywkę, wznów ją!
 			controlGUIPrompts("resume");
+			//toggleWell(false); //zostanie użyta, gdy zacznie działać poprawnie!
 			main();
 			console.log("Grę wznowiono!");
 			bPlay = true;
@@ -1357,7 +1376,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		}
 		else {
 			//odtwórz wygląd segmentów z local storage
-			oRow = oLocalStorage.getItem("wellState").parse();
+			oRows = oLocalStorage.getItem("wellState").parse();
 		}
 		return;
 	},
@@ -1475,8 +1494,8 @@ oTest6.setAttribute("value",oTestEnvironment.scenarios[5][0]);
 oTest7.value = oTestEnvironment.scenarios[6][0]; //w ten sposób także działa
 
 //loadTest(6);
-//initGame();
-//drawPiece(); //losuj klocek inicjujący grę
+
+controlGUIPrompts("init");
 
 document.addEventListener("keydown", keyboardHandler, true);
 //window.addEventListener("unload", simplePrompt, false);
