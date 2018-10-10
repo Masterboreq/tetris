@@ -583,17 +583,17 @@
 	</div>
 	<div class="clearfloat"></div>
 	<!-- Komunikaty GUI: overlay -->
-	<div id="overlay" style="display: block">
-		<div id="ticker" style="display: none">&nbsp;</div>
-		<div id="init-screen" class="gui-prompts" style="display: block">INIT screen
-			<label for="level" style="display: block;">Ustaw poziom</label>
-			<input style="display: none;" type="text" id="level" name="level" value="1" size="2" class="controls" />
-			<input style="display: none;" type="button" id="start-game" value="Rozpocznij" class="buttons"/>
+	<div id="overlay" mode="off">
+		<div id="ticker" mode="off">&nbsp;</div>
+		<div id="init-screen" class="gui-prompts" mode="off">INIT screen
+			<label for="level">Ustaw poziom</label>
+			<input type="text" id="level" name="level" value="1" size="2" class="controls" />
+			<input type="button" id="start-game" value="Rozpocznij" class="buttons"/>
 		</div>
-		<div id="end-screen" class="gui-prompts" style="display: block">END screen</div>
-		<div id="pause-screen" class="gui-prompts" style="display: block"></div>
+		<div id="end-screen" class="gui-prompts" mode="off">END screen</div>
+		<div id="pause-screen" class="gui-prompts" mode="off">PAUSE screen</div>
 	</div>
 	</body>
+		<script type="text/javascript" src="js/pl.lang.js"></script>
 		<script type="text/javascript" src="js/tetris.js"></script>
-		<!--script type="text/javascript" src="js/entropy.js"></script-->
 </html>
