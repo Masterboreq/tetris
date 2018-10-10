@@ -227,7 +227,7 @@ div#well div div:first-child {
 }
 
 #overlay {
-	display: block;
+	display: none;
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -236,8 +236,9 @@ div#well div div:first-child {
 	z-index: 10;
 }
 #ticker {
+	display: none;
 	position: relative;
-	top: 215px;
+	top: 80px;
 	margin: 0% auto;
 	width: 250px;
 	height: 50px;
@@ -246,22 +247,26 @@ div#well div div:first-child {
 	z-index: 10;
 }
 
-#init-screen {
+.gui-prompts {
 	display: block;
 	position: relative;
 	width: 250px;
 	height: 250px;
-	top: 50px;
+	left: 0px;
+	top: 120px;
 	margin: 0% auto;
+	
 }
+#init-screen {
+	
+}
+
+#pause-screen {
+	
+}
+
 #end-screen {
-	display: block;
-	position: relative;
-	width: 250px;
-	height: 250px;
-	top: -20px;
-	left: 10px;
-	margin: 0% auto;
+	
 }
 
 fieldset#te {
