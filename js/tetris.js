@@ -44,7 +44,7 @@ var oEvent = window.event,
 	oNegativePile5 = document.getElementById("neg5"), 
 	oNegativePile6 = document.getElementById("neg6"), 
 		
-	/* ### Etykietki słupków histogramu ### */
+	/* ### Etykietki słupków histogramu - ilość klocków ### */
 	oK0 = document.getElementById("k0"),
 	oK1 = document.getElementById("k1"),
 	oK2 = document.getElementById("k2"),
@@ -52,6 +52,15 @@ var oEvent = window.event,
 	oK4 = document.getElementById("k4"),
 	oK5 = document.getElementById("k5"),
 	oK6 = document.getElementById("k6"),
+	
+	/* ### Etykietki słupków histogramu -procent klocków ### */
+	oP0 = document.getElementById("p0"),
+	oP1 = document.getElementById("p1"),
+	oP2 = document.getElementById("p2"),
+	oP3 = document.getElementById("p3"),
+	oP4 = document.getElementById("p4"),
+	oP5 = document.getElementById("p5"),
+	oP6 = document.getElementById("p6"),
 	
 	aGameImplementationTopLeft = [0,5], //2,7
 	/*
@@ -630,7 +639,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		iNextPiece = pickChar(aEntropyPool);
 		
 		histogram = new Histogram(); //tworzenie nowego rozkładu klocków
-		//UWAGA! Wywołanie metody Histogram.addElement() dopiero w drawPiece()
+		histogram.addElement(iNextPiece); //dodanie pierwszego wylosowanego klocka do nowego rozkładu; następne wywołanie metody Histogram.addElement() dopiero w drawPiece()
 		
 		aRowCompleteness = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]; //reset zmiennej globalnej
 
@@ -1163,30 +1172,37 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		
 		var tempPerc = 0;
 		oK0.firstChild.nodeValue = histogram.quantity[0];
+		oP0.firstChild.nodeValue = Math.round(histogram.frequency[0]*100,2);
 		tempPerc = histogram.frequency[0]*100;
 		oNegativePile0.style.height = (100-tempPerc)+"%";
 		
 		oK1.firstChild.nodeValue = histogram.quantity[1];
+		oP1.firstChild.nodeValue = Math.round(histogram.frequency[1]*100,2);
 		tempPerc = histogram.frequency[1]*100;
 		oNegativePile1.style.height = (100-tempPerc)+"%";
 		
 		oK2.firstChild.nodeValue = histogram.quantity[2];
+		oP2.firstChild.nodeValue = Math.round(histogram.frequency[2]*100,2);
 		tempPerc = histogram.frequency[2]*100;;
 		oNegativePile2.style.height = (100-tempPerc)+"%";
 		
 		oK3.firstChild.nodeValue = histogram.quantity[3];
+		oP3.firstChild.nodeValue = Math.round(histogram.frequency[3]*100,2);
 		tempPerc = histogram.frequency[3]*100;
 		oNegativePile3.style.height = (100-tempPerc)+"%";
 		
 		oK4.firstChild.nodeValue = histogram.quantity[4];
+		oP4.firstChild.nodeValue = Math.round(histogram.frequency[4]*100,2);
 		tempPerc = histogram.frequency[4]*100;
 		oNegativePile4.style.height = (100-tempPerc)+"%";
 		
 		oK5.firstChild.nodeValue = histogram.quantity[5];
+		oP5.firstChild.nodeValue = Math.round(histogram.frequency[5]*100,2);
 		tempPerc = histogram.frequency[5]*100;
 		oNegativePile5.style.height = (100-tempPerc)+"%";
 		
 		oK6.firstChild.nodeValue = histogram.quantity[6];
+		oP6.firstChild.nodeValue = Math.round(histogram.frequency[6]*100,2);
 		tempPerc = histogram.frequency[6]*100;
 		oNegativePile6.style.height = (100-tempPerc)+"%";
 		return;
