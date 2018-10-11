@@ -85,7 +85,6 @@ a {
 	float: left;
 	width: 20px;
 	height: 100%;
-	background: none;
 	margin-left: 4px;
 }
 
@@ -112,8 +111,7 @@ a {
 
 .podium {
 	margin-top: 3px;
-	height: 20px;
-	text-align: center;
+	height: 55px;
 }
 
 #y-axis, #y-podium {

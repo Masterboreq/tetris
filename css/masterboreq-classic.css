@@ -28,10 +28,11 @@ a {
 }
 
 #toolbar {
-	background-color: rgba(10,10,10, .65);
-	background-attachment: content-box;
-	/*background-image: url(../img/toolbar-bg.png), linear-gradient(rgba(10,10,10, .85), rgba(20,20,20, .35));*/
-	background-size: 120px auto;
+	/*background-color: rgba(10,10,10, .65);*/
+	background-origin: border-box;
+	background-image: url(../img/toolbar-bg.png);
+	background-size: auto 100%;
+	background-position: 200px center;
 	background-repeat: repeat-x;
 }
 
@@ -68,7 +69,6 @@ a {
 	position: relative;
 	float: left;
 	width: 20px;
-	height: 100%;
 	margin-left: 4px;
 }
 
@@ -93,15 +93,45 @@ a {
 }
 
 .podium {
-	margin-top: 3px;
-	height: 20px;
 	text-align: center;
-	background: rgba(160,37,37, 1);
+	background-color: rgba(160,37,37, .72);
+	background-position: bottom;
+	background-origin: border-box;
+	background-size: 20px auto;
+	background-repeat: no-repeat;
 }
 
 #y-axis, #y-podium {
 	background: none;
 	border-left: 2px solid #000;
+}
+
+#o-podium {
+	background-image: url(../img/o.png);
+}
+
+#i-podium {
+	background-image: url(../img/i.png);
+}
+
+#s-podium {
+	background-image: url(../img/s.png);
+}
+
+#z-podium {
+	background-image: url(../img/z.png);
+}
+
+#l-podium {
+	background-image: url(../img/l.png);
+}
+
+#j-podium {
+	background-image: url(../img/j.png);
+}
+
+#t-podium {
+	background-image: url(../img/t.png);
 }
 
 #gui-right {
