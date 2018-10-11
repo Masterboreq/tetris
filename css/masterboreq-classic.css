@@ -18,13 +18,21 @@ a {
 	border: 1px solid black;
 	background: #fff url(../img/stbasil-1.jpg) no-repeat;
 	background-size: 120%;
-	background-position: -81px -81px;
+	background-position: -81px -60px;
 }
 
 #toolbar, #footer {
 	border: 1px solid black;
-	background: rgba(10,10,10, .85);
 	color: #fff;
+	background-color: rgba(10,10,10, .85);
+}
+
+#toolbar {
+	background-color: rgba(10,10,10, .65);
+	background-attachment: content-box;
+	/*background-image: url(../img/toolbar-bg.png), linear-gradient(rgba(10,10,10, .85), rgba(20,20,20, .35));*/
+	background-size: 120px auto;
+	background-repeat: repeat-x;
 }
 
 #tetris-logo {
@@ -61,7 +69,6 @@ a {
 	float: left;
 	width: 20px;
 	height: 100%;
-	background: none;
 	margin-left: 4px;
 }
 
@@ -82,12 +89,14 @@ a {
 	display: block;
 	margin-bottom: 30px;
 	text-align: center;
+	color: #fff;
 }
 
 .podium {
 	margin-top: 3px;
 	height: 20px;
 	text-align: center;
+	background: rgba(160,37,37, 1);
 }
 
 #y-axis, #y-podium {
@@ -182,13 +191,13 @@ div#well div div:first-child {
 
 /* Overlay ogólnego zastosowania pod wyświetlanie komunikatów */
 #overlay {
-	background: rgba(0, 0, 0, .65);
+	background: rgba(0, 0, 0, .85);
 }
 #overlay[mode="off"] {
 	display: none;
 }
 #overlay[mode="on"] {
-	display: block;
+	display: none;
 } /* Tutaj możliwe do zaimplementowania różne inne wartości atrybutu mode dla #overlay*/
 
 /* Ticker ogólnego zastosowania pod wyświetlanie komunikatów */
@@ -250,8 +259,9 @@ fieldset#monitor {
 }
 
 #next-piece {
-	border: 2px solid rgba(255, 255, 255, .6);
+	border: 2px solid rgb(99, 15, 9);
 	border-radius: 5px;
+	background: rgba(93, 141, 249, 0.48);
 }
 
 legend {
