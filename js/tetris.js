@@ -1152,7 +1152,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 				}
 				else {
 					//rysuj pustych segment
-					oPreview[r].children[c].style.backgroundColor = "#fff";
+					oPreview[r].children[c].style.backgroundColor = "rgba(0,0,0,0.0)";
 				}
 			}
 			while(++c<=3);
@@ -1297,7 +1297,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		switch(action) {
 			case "init": ; //ekran powitalny gry zaraz po intrze (TODO: intro gry)
 				oOverlay.setAttribute("mode", "on");
-				oTicker.firstChild.nodeValue = aGamePrompts[2];
+				oTicker.firstChild.nodeValue = oGamePrompts.newGame;
 				oTicker.setAttribute("mode", "on");
 				oInitScreen.setAttribute("mode", "on");
 			break;
@@ -1312,7 +1312,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 			case "pause": //grę spauzowano
 				oWell.style.display = "none";
 				oOverlay.setAttribute("mode", "on");
-				oTicker.firstChild.nodeValue = aGamePrompts[0];
+				oTicker.firstChild.nodeValue = oGamePrompts.pause;
 				oTicker.setAttribute("mode", "on");
 				oPauseScreen.setAttribute("mode", "on");
 			break;
@@ -1329,7 +1329,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 				//oOverlay.style.backgroundColor = "rgba(255, 255, 255, .5)";
 				//oTicker.style.display = "block";
 				oOverlay.setAttribute("mode", "on");
-				oTicker.firstChild.nodeValue = aGamePrompts[1];
+				oTicker.firstChild.nodeValue = oGamePrompts.gameOver;
 				oTicker.setAttribute("mode", "on");
 				oEndScreen.setAttribute("mode", "on");
 			break;
