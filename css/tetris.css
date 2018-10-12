@@ -42,8 +42,8 @@ a {
 
 .menu-item {
 	float: right;
-	width: 58px;
-	height: 38px;
+	width: 90px;
+	height: 58px;
 }
 
 .menu-item a {
@@ -111,7 +111,7 @@ a {
 
 .podium {
 	margin-top: 3px;
-	height: 55px;
+	height: 60px;
 }
 
 #y-axis, #y-podium {
@@ -225,7 +225,11 @@ div#well div div:first-child {
 #footer ul li {
 	display: inline;
 	float: right;
-	margin-left: 20px;
+	margin-left: 15px;
+}
+
+#copyright {
+	margin: 2px;
 }
 
 #overlay {

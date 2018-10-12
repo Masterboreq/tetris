@@ -41,11 +41,23 @@ a {
 }
 
 .menu-item {
-	border: 1px solid orange;
+	border-top: 2px solid rgba(10,10,10, .8);
+	background-color: rgba(10,10,10, .8);
+	text-align: center;
+}
+
+.menu-item:hover {
+	border-top: 2px solid rgb(19, 165, 241);
+	background-color: rgb(225, 183, 11);
+	color: #000;
 }
 
 .menu-item a {
 	/* Specjalnie pozostawione puste */
+}
+
+.menu-item:hover a {
+	color: inherit;
 }
 
 #gamefield-wrapper {
@@ -68,7 +80,7 @@ a {
 .pile {
 	position: relative;
 	float: left;
-	width: 20px;
+	width: 21px;
 	margin-left: 4px;
 }
 
@@ -96,14 +108,19 @@ a {
 	text-align: center;
 	background-color: rgba(160,37,37, .72);
 	background-position: bottom;
-	background-origin: border-box;
+	background-origin: content-box;
 	background-size: 20px auto;
 	background-repeat: no-repeat;
+	padding-bottom: 3px;
 }
 
-#y-axis, #y-podium {
+#y-axis { 
 	background: none;
 	border-left: 2px solid #000;
+}
+
+#y-podium {
+	background-image: url(../img/all.png);
 }
 
 #o-podium {
@@ -152,14 +169,20 @@ a {
 	background-size: 220%;	
 }
 #left-bank, #right-bank, #bottom-bank {
-	/* Specjalnie pozostawione puste */
+	background-origin: border-box;
+	background: rgba(10,10,10, .55);
+	background-image: url(../img/bank-bg2.png);
+	background-size: auto 100%;
+	background-position: -1px 54px;
+	background-repeat: repeat-y;
 }
 #right-bank {
-	
-	/* Specjalnie pozostawione puste */
+	background-position: -1px 85px;
 }
 #bottom-bank {
-	background: rgba(255,255,255, .4);
+	background-image: url(../img/bottom-bg2.png);
+	background-position: -1px 0px;
+	background-size: 141%;
 }
 .cell {
 	border: 1px solid rgba(255,255,255, .2);
@@ -170,7 +193,7 @@ a {
 }
 
 .bumper {
-	background-color: #8ecc15 !important;
+	/*background-color: #8ecc15 !important; */
 	display: none;
 }
 
@@ -216,7 +239,15 @@ div#well div div:first-child {
 }
 
 #footer ul li {
-	/* Specjalnie pozostawione puste */
+	padding: 3px 5px;
+	border-radius: 4px;
+}
+#footer ul li:hover {
+	background-color: rgb(225, 183, 11);
+	color: #000;
+}
+#footer ul li:hover a {
+	color: inherit;
 }
 
 /* Overlay ogólnego zastosowania pod wyświetlanie komunikatów */
