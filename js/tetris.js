@@ -45,6 +45,7 @@ var oEvent = window.event,
 	oNegativePile6 = document.getElementById("neg6"), 
 		
 	/* ### Etykietki słupków histogramu - ilość klocków ### */
+	oPiecesTotal = document.getElementById("t0"),
 	oK0 = document.getElementById("k0"),
 	oK1 = document.getElementById("k1"),
 	oK2 = document.getElementById("k2"),
@@ -53,7 +54,7 @@ var oEvent = window.event,
 	oK5 = document.getElementById("k5"),
 	oK6 = document.getElementById("k6"),
 	
-	/* ### Etykietki słupków histogramu -procent klocków ### */
+	/* ### Etykietki słupków histogramu - procent klocków ### */
 	oP0 = document.getElementById("p0"),
 	oP1 = document.getElementById("p1"),
 	oP2 = document.getElementById("p2"),
@@ -1168,7 +1169,8 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		}
 		while(++r<=3);
 		
-		oLines.firstChild.nodeValue = iRowCounter; //pierwotnie było na końcu collapse()
+		oLines.firstChild.nodeValue = iRowCounter; //aktualizacja licznika linii
+		oPiecesTotal.firstChild.nodeValue = histogram.count; //aktualizacja licznika sumy wylosowanych klocków
 		
 		var tempPerc = 0;
 		oK0.firstChild.nodeValue = histogram.quantity[0];
