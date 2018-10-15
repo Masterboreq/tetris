@@ -31,7 +31,7 @@ var oEvent = window.event,
 	oPauseScreen  = document.getElementById("pause-screen"),
 	oEndScreen = document.getElementById("end-screen"),
 	oStartGameButton = document.getElementById("start-game"),
-	aGUIhrefs = document.getElementsByClassName("gui-pause"),
+	aGUIhrefs = document.getElementsByClassName("gui-prompt"),
 	
 	//TODO: przypisać kontrolkom obsługę zdarzeń (klik) i skrót klawiaturowy
 	
@@ -63,6 +63,7 @@ var oEvent = window.event,
 	oP5 = document.getElementById("p5"),
 	oP6 = document.getElementById("p6"),
 	
+	
 	aGameImplementationTopLeft = [0,5], //2,7
 	/*
 		Ta zmienna to źródło do kopiowania współrzędnych [Y,X] do aActualTopLeft klocków.
@@ -89,7 +90,7 @@ var oEvent = window.event,
 		actualOrientation: 0,
 		aActualTopLeft: aGameImplementationTopLeft.slice(), //aActualTopLeft zawiera BEZWGLĘDNE współrzędne [Y,X] względem lewego, górnego narożnika studzienki
 		name: "Klocek O",
-		color: "#ff0d0d"
+		color: Theme.piece.O.backgroundColor
 	},
 	oPieceI = {
 		orientations: [
@@ -109,7 +110,7 @@ var oEvent = window.event,
 		actualOrientation: 0,
 		aActualTopLeft: aGameImplementationTopLeft.slice(),
 		name: "Klocek I",
-		color: "#a50000"
+		color: Theme.piece.I.backgroundColor
 	},
 	oPieceS = {
 		orientations: [
@@ -129,7 +130,7 @@ var oEvent = window.event,
 		actualOrientation: 0,
 		aActualTopLeft: aGameImplementationTopLeft.slice(),
 		name: "Klocek S",
-		color: "#e43957"
+		color: Theme.piece.S.backgroundColor
 	},
 	oPieceZ = {
 		orientations: [
@@ -149,7 +150,7 @@ var oEvent = window.event,
 		actualOrientation: 0,
 		aActualTopLeft: aGameImplementationTopLeft.slice(),
 		name: "Klocek Z",
-		color: "#19198e"
+		color: Theme.piece.Z.backgroundColor
 	},
 	oPieceL = {
 		orientations: [
@@ -181,7 +182,7 @@ var oEvent = window.event,
 		actualOrientation: 0,
 		aActualTopLeft: aGameImplementationTopLeft.slice(),
 		name: "Klocek L",
-		color: "#ad0cad"
+		color: Theme.piece.L.backgroundColor
 	},
 	oPieceJ = {
 		orientations: [
@@ -213,7 +214,7 @@ var oEvent = window.event,
 		actualOrientation: 0,
 		aActualTopLeft: aGameImplementationTopLeft.slice(),
 		name: "Klocek J",
-		color: "#00b300"
+		color: Theme.piece.J.backgroundColor
 	},
 	oPieceT = {
 		orientations: [
@@ -245,7 +246,7 @@ var oEvent = window.event,
 		actualOrientation: 0,
 		aActualTopLeft: aGameImplementationTopLeft.slice(), //[Y,X] !!
 		name: "Klocek T",
-		color: "orange"
+		color: Theme.piece.T.backgroundColor
 	},
 	
 	//tablica klocków
@@ -447,16 +448,17 @@ var oEvent = window.event,
 	oPreview = oNextPiece.getElementsByClassName("row");
 	
 	//spajanie rzędów i komórek w jeden obiekt, którego elementy można łatwo adresować i po nich iterować
-oRows.row = [];
+	oRows.row = [];
 j=0;
 do {
 	oRows.row.push(oRows[j].getElementsByClassName("cell"));
 }
 while(oRows[++j]);
 
+
 /* ### Zmienne skórki (schematu) ### */
-var sCellBorderColor = "rgba(255,255,255, 0.2)",
-	sCellBackgroundColor = "rgba(230,255,189,1)",
+var sCellBorderColor = Theme.well.cellBorderColor,
+	sCellBackgroundColor = Theme.well.cellBackgroundColor,
 
 	/* ### Funkcje ### */
 	setSpeed = function() {
@@ -1172,41 +1174,42 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		oLines.firstChild.nodeValue = iRowCounter; //aktualizacja licznika linii
 		oPiecesTotal.firstChild.nodeValue = histogram.count; //aktualizacja licznika sumy wylosowanych klocków
 		
-		var tempPerc = 0;
+		var tempPerc = 0,
+			threshold = 50; //TODO: aby obniżyć
 		oK0.firstChild.nodeValue = histogram.quantity[0];
 		oP0.firstChild.nodeValue = Math.round(histogram.frequency[0]*100,2);
 		tempPerc = histogram.frequency[0]*100;
-		oNegativePile0.style.height = (100-tempPerc)+"%";
+		oNegativePile0.style.height = 2*(threshold-tempPerc)+"%";
 		
 		oK1.firstChild.nodeValue = histogram.quantity[1];
 		oP1.firstChild.nodeValue = Math.round(histogram.frequency[1]*100,2);
 		tempPerc = histogram.frequency[1]*100;
-		oNegativePile1.style.height = (100-tempPerc)+"%";
+		oNegativePile1.style.height = 2*(threshold-tempPerc)+"%";
 		
 		oK2.firstChild.nodeValue = histogram.quantity[2];
 		oP2.firstChild.nodeValue = Math.round(histogram.frequency[2]*100,2);
 		tempPerc = histogram.frequency[2]*100;;
-		oNegativePile2.style.height = (100-tempPerc)+"%";
+		oNegativePile2.style.height = 2*(threshold-tempPerc)+"%";
 		
 		oK3.firstChild.nodeValue = histogram.quantity[3];
 		oP3.firstChild.nodeValue = Math.round(histogram.frequency[3]*100,2);
 		tempPerc = histogram.frequency[3]*100;
-		oNegativePile3.style.height = (100-tempPerc)+"%";
+		oNegativePile3.style.height = 2*(threshold-tempPerc)+"%";
 		
 		oK4.firstChild.nodeValue = histogram.quantity[4];
 		oP4.firstChild.nodeValue = Math.round(histogram.frequency[4]*100,2);
 		tempPerc = histogram.frequency[4]*100;
-		oNegativePile4.style.height = (100-tempPerc)+"%";
+		oNegativePile4.style.height = 2*(threshold-tempPerc)+"%";
 		
 		oK5.firstChild.nodeValue = histogram.quantity[5];
 		oP5.firstChild.nodeValue = Math.round(histogram.frequency[5]*100,2);
 		tempPerc = histogram.frequency[5]*100;
-		oNegativePile5.style.height = (100-tempPerc)+"%";
+		oNegativePile5.style.height = 2*(threshold-tempPerc)+"%";
 		
 		oK6.firstChild.nodeValue = histogram.quantity[6];
 		oP6.firstChild.nodeValue = Math.round(histogram.frequency[6]*100,2);
 		tempPerc = histogram.frequency[6]*100;
-		oNegativePile6.style.height = (100-tempPerc)+"%";
+		oNegativePile6.style.height = 2*(threshold-tempPerc)+"%";
 		return;
 	},
 	collapse = function() {
@@ -1302,16 +1305,30 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 		//console.log("Orzeł wylądował!");
 		return;
 	},
-	controlGUIPrompts = function(action) {
+	controlGUIPrompts = function(action="") {
 		/*
 			Funkcja obsługi zachowania GUI dla takich zdarzeń i stanów gry jak pauza, wybór języka GUI, wybór tematu GUI itp.
+			
+			UWAGA! Funkcja przyjmuje następujące dane wejściowe:
+			1. Wyraźnie zadany argument action, JEŻELI wywołana jawnie w kodzie,
+			LUB
+			2. polega na wartości Element.hash, JEŻELI wywołana za pomocą procedury obsługi zdarzenia jako funkcja do obsługi zdarzenia.
 		*/
+		
+		var hash = this.hash;
+		/*UWAGA! this odnosi się tutaj do węzła (elementu), który wywołał funkcję jako argument obsługi zdarzenia (Element.addEventListener)
+		*/
+
+		if(typeof hash == "string") {
+			action = hash.substring(1);
+		}
 		
 		// ### Czyszczenie stanu ekranów
 		oInitScreen.setAttribute("mode", "off");
 		oPauseScreen.setAttribute("mode", "off");
 		oEndScreen.setAttribute("mode", "off");
 		
+		/* ### Lista obsługiwanych ekranów dla zdarzeń ### */
 		switch(action) {
 			case "init": ; //ekran powitalny gry zaraz po intrze (TODO: intro gry)
 				oOverlay.setAttribute("mode", "on");
@@ -1334,7 +1351,7 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 				oTicker.setAttribute("mode", "on");
 				oPauseScreen.setAttribute("mode", "on");
 			break;
-			
+						
 			case "resume": ; //grę wznowiono po pauzie
 				oWell.style.display = "block";
 				oOverlay.setAttribute("mode", "off");
@@ -1343,9 +1360,6 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 			break;
 			
 			case "endgame": ; //gra się zakończyła
-				//oOverlay.style.display = "block";
-				//oOverlay.style.backgroundColor = "rgba(255, 255, 255, .5)";
-				//oTicker.style.display = "block";
 				oOverlay.setAttribute("mode", "on");
 				oTicker.firstChild.nodeValue = oGamePrompts.gameOver;
 				oTicker.setAttribute("mode", "on");
@@ -1353,6 +1367,33 @@ var sCellBorderColor = "rgba(255,255,255, 0.2)",
 			break;
 			
 			case "storehiscore": ; //wpisz się na listę najlepszych wyników
+			break;
+			
+			case "settings": ; //pokaż ekran ustawień
+			break;
+			
+			case "scoreboard": ; //pokaż tablicę najlepszych wyników
+			break;
+			
+			case "rules": ; //pokaż zasady gry
+			break;
+
+			case "controls": ; //pokaż klawiszologię
+			break;
+			
+			case "about": ; //pokaż artykuł o oryginalnym Tetrisie
+			break;
+			
+			case "aboutapp": ; //pokaż info o tej aplikacji
+			break;
+			
+			case "translate": ; //pokaż ekran zachęcający do przetłumaczenia aplikacji
+			break;
+			
+			case "codebase": ; //pokaż ekran z informacją o kodzie do pobrania
+			break;
+			
+			case "copyright": ; //pokaż ekran z informacją o licencji
 			break;
 		}
 		return;
@@ -1515,7 +1556,19 @@ oTest7.value = oTestEnvironment.scenarios[6][0]; //w ten sposób także działa
 
 controlGUIPrompts("init");
 
+
+/* ### Inicjalizacja obsługi zdarzeń ### */
 document.addEventListener("keydown", keyboardHandler, true);
+oStartGameButton.addEventListener("click", start, true);
+
+var a=0;
+do {
+	aGUIhrefs[a++].addEventListener("click", controlGUIPrompts, true);
+}
+while(aGUIhrefs[a]);
+
+/*
+DEPRECATED
 //window.addEventListener("unload", simplePrompt, false);
 oTest1.addEventListener("click", loadInvaders, true);
 oTest2.addEventListener("click", loadPacman, true);
@@ -1525,7 +1578,4 @@ oTest5.addEventListener("click", loadPong, true);
 oTest6.addEventListener("click", loadSecretBox, true);
 oTest7.addEventListener("click", loadQuake, true);
 
-
-aGUIhrefs[0].addEventListener("click", togglePlay, true);
-
-oStartGameButton.addEventListener("click", start, true);
+*/
