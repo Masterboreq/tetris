@@ -75,6 +75,8 @@ a {
 
 #histogram {
 	background: rgba(160,37,37, 1);
+	height: 21.2%;
+	
 }
 
 .pile {
@@ -87,7 +89,7 @@ a {
 .negative {
 	position: relative;
 	width: 100%;
-	height: 100%;
+	height: 50%;
 	float: left;
 	background: rgba(160,37,37, 1);
 	z-index: 2;
@@ -234,18 +236,32 @@ div#well div div:first-child {
 	color: #ffd255;
 }
 
+/*TODO: do poprawy 
+ .gui-prompt,
+ # footer *
+*/
+.gui-prompt {
+	padding: 3px 5px;
+	border-radius: 4px;
+}
+
+.gui-prompt:hover {
+	background-color: rgb(225, 183, 11);
+	color: #000;
+}
+
 #footer {
 	/* Specjalnie pozostawione puste */
 }
 
-#footer ul li {
+/*#footer a:hover, #footer ul li {
 	padding: 3px 5px;
 	border-radius: 4px;
 }
-#footer ul li:hover {
+#footer a:hover, #footer ul li:hover {
 	background-color: rgb(225, 183, 11);
 	color: #000;
-}
+}*/
 #footer ul li:hover a {
 	color: inherit;
 }
