@@ -14,11 +14,11 @@
 	<div id="wrapper">
 		<div id="toolbar">
 			<div id="tetris-logo">Logo</div>
-			<div class="menu-item"><a class="gui-pause" href="#lang">Lang</a></div>
-			<div class="menu-item"><a class="gui-pause" href="#hiscores">Hi-Scores</a></div>
-			<div class="menu-item"><a class="gui-pause" href="#manual">Manual</a></div>
-			<div class="menu-item"><a class="gui-pause" href="#controls">Controls</a></div>
-			<div class="menu-item"><a class="gui-pause" href="#">About Tetris</a></div>
+			<div class="menu-item"><a class="gui-prompt" href="#settings">Lang&amp;theme</a></div>
+			<div class="menu-item"><a class="gui-prompt" href="#hiscores">Hi-Scores</a></div>
+			<div class="menu-item"><a class="gui-prompt" href="#rules">Game rules</a></div>
+			<div class="menu-item"><a class="gui-prompt" href="#controls">Controls&amp;manual</a></div>
+			<div class="menu-item"><a class="gui-prompt" href="#about">About Tetris</a></div>
 			<div class="clearfloat"></div>
 		</div>
 		<div id="well">
@@ -438,11 +438,11 @@
 			<div id="gui-left">
 				<span class="bold">Hi-Score</span>
 				<span class="score">50000</span>
+				<span class="bold">Twój hi-score</span>
+				<span class="score">2000</span>
 				<span class="bold">Histogram klocków</span>
 				<div id="histogram" class="">
 					<div class="pile" id="y-axis">
-						<span class="percentage">100%</span>
-						<span class="percentage">75%</span>
 						<span class="percentage">50%</span>
 						<span class="percentage">25%</span>
 						<span class="percentage">0%</span>
@@ -483,7 +483,7 @@
 						<div class="clearfloat"></div>
 					</div>
 					<div id="y-podium" class="pile podium">
-						<span class="percentage" id="t0">0</span>
+						<!--span>&#931;</span--><span class="percentage" id="t0">0</span>
 					</div>
 					<div id="o-podium" class="pile podium">
 						<span class="percentage" id="k0">0</span>
@@ -574,11 +574,11 @@
 		</div>
 		<div id="footer">
 			<ul>
-				<li><a class="gui-pause" href="#">O aplikacji</a></li>
-				<li><a class="gui-pause" href="#">Przetłumacz na swój język</a></li>
-				<li><a class="gui-pause" href="#">Repozytorium</a></li>
+				<li><a class="gui-prompt" href="#aboutapp">O aplikacji</a></li>
+				<li><a class="gui-prompt" href="#translate">Przetłumacz na swój język</a></li>
+				<li><a class="gui-prompt" href="#codebase">Repozytorium</a></li>
 			</ul>
-			<a class="gui-pause" href="#" id="copyright" style="float: left">&copy;&nbsp;Boreq.com 2018</a>
+			<a class="gui-prompt" href="#copyright" id="copyright" style="float: left">&copy;&nbsp;Boreq.com 2018</a>
 		</div>
 	</div>
 	
@@ -595,5 +595,6 @@
 	</div>
 	</body>
 		<script type="text/javascript" src="js/pl.lang.js"></script>
+		<script type="text/javascript" src="js/theme.js"></script>
 		<script type="text/javascript" src="js/tetris.js"></script>
 </html>
