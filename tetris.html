@@ -567,7 +567,6 @@
 				<span class="score" id="points">0</span>
 				<span class="bold">Linie</span>
 				<span class="score" id="lines">0</span>
-				<input style="display: none;" type="button" id="pause-game" value="Pauza" class="buttons"/>
 			</fieldset>	
 			</div>
 			<div class="clearfloat"></div>
@@ -588,10 +587,25 @@
 		<div id="init-screen" class="gui-prompts" mode="off">INIT screen
 			<label for="level">Ustaw poziom</label>
 			<input type="text" id="level" name="level" value="1" size="2" class="controls" />
-			<input type="button" id="start-game" value="Rozpocznij" class="buttons"/>
+			<a class="gui-prompt" href="#resume">Rozpocznij</a>
 		</div>
-		<div id="end-screen" class="gui-prompts" mode="off">END screen</div>
-		<div id="pause-screen" class="gui-prompts" mode="off">PAUSE screen</div>
+		<div id="pause-screen" class="gui-prompts" mode="off">PAUSE screen
+		<a class="gui-prompt" href="#resume">Kontynuuj grę</a>
+		<a class="gui-prompt" href="#endgame">Zakończ grę</a>
+		</div>
+		<div id="end-screen" class="gui-prompts" mode="off">Game over</div>
+		<div id="store-hiscore" class="gui-prompts" mode="off">Wpisz nowy wynik</div>
+		<div id="settings" class="gui-prompts" mode="off">
+		TODO: Twoja gra została spauzowana.<br/>
+		USTAWIENIA</div>
+		<div id="scoreboard" class="gui-prompts" mode="off">SCOREBOARD</div>
+		<div id="rules" class="gui-prompts" mode="off">ZASADY GRY</div>
+		<div id="controls" class="gui-prompts" mode="off">Klawiszologia</div>
+		<div id="about" class= "gui-prompts" mode="off">O grze Tetris&trade;</div>
+		<div id="about-app" class="gui-prompts" mode="off">O aplikacji</div>
+		<div id="translate" class="gui-prompts" mode="off">Przetłumacz na swój język</div>
+		<div id="codebase" class="gui-prompts" mode="off">Github</div>
+		<div id="copyright" class="gui-prompts" mode="off">Licencja</div>
 	</div>
 	</body>
 		<script type="text/javascript" src="js/pl.lang.js"></script>
