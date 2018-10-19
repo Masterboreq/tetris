@@ -45,7 +45,8 @@ var oLang = {
 		gameOver: "Koniec gry",
 		newGame: "Nowa gra",
 		beginGame: "Naciśnij spację, aby rozpocząć grę!",
-		endGame: "Czy chcesz zakończyć grę?"
+		endGame: "Czy chcesz zakończyć grę?",
+		settings: "Ustawienia"
 	},
 	
 	aEndGamePromts = [

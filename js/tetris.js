@@ -25,13 +25,24 @@ var oEvent = window.event,
 	oPauseGameButton = document.getElementById("pause-game"),
 
 	/* ### Elementy GUI ### */
+	aGUIhrefs = document.getElementsByClassName("gui-prompt"),
+	oStartGameButton = document.getElementById("start-game"),
 	oOverlay = document.getElementById("overlay"),
 	oTicker = document.getElementById("ticker"),
 	oInitScreen = document.getElementById("init-screen"),
 	oPauseScreen  = document.getElementById("pause-screen"),
 	oEndScreen = document.getElementById("end-screen"),
-	oStartGameButton = document.getElementById("start-game"),
-	aGUIhrefs = document.getElementsByClassName("gui-prompt"),
+	oStoreHiscore = document.getElementById("store-hiscore"),
+	oSettings = document.getElementById("settings"),
+	oScoreboard = document.getElementById("scoreboard"),
+	oRules = document.getElementById("rules"),
+	oControls = document.getElementById("controls"),
+	oAbout = document.getElementById("about"),
+	oAboutApp = document.getElementById("about-app"),
+	oTranslate = document.getElementById("translate"),
+	oCodebase = document.getElementById("codebase"),
+	oCopyright = document.getElementById("copyright"),
+	
 	
 	//TODO: przypisać kontrolkom obsługę zdarzeń (klik) i skrót klawiaturowy
 	
@@ -893,11 +904,41 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		main();
 		return false;
 	},
-	keyboardHandler = function(oEvent) {
-		//obługa klawiatury dla ruchu klocków. Być może trzeba zmienić nazwę tej funkcji
-		switch(oEvent.keyCode) {
+	handleGameActions = function(oEvent) {
+		//TODO: przemianować nazwę funkcji na coś w rodzaju handleEvent lub handleGameActions
+		var action = "";
+		
+		if(oEvent.type == "keydown") {
+			//obługa klawiatury dla ruchu klocków
+			action = oEvent.keyCode;
+		}
+		else if(oEvent.type == "click") {
+			//obługa myszy dla reszty GUI
+			action = oEvent.target.hash;
+			action = action.substring(1); //usuwamy znak "#"
+		}
+		else {
+			//TODO: się zobaczy:)
+		}
+		console.log("handleGameActions: "+action);
+		
+		switch(action) {
+			/* ### Akcje kontrolowane klawiaturą ### */
 			//spacja
-			case 32:	bGameOver ? start() : togglePlay();
+			case 32:	
+				if(bGameOver) {
+					start();
+					controlGUIPrompts("newgame");
+				}
+				else {
+					togglePlay();
+					if(bPlay) {
+						controlGUIPrompts("resume");
+					}
+					else {
+						controlGUIPrompts("pause");
+					}
+				}
 			break;
 			//Przesuwanie klocka w lewo
 			case 37:	bPlay ? stepSide(0) : null;
@@ -910,6 +951,72 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 			break;
 			//Przesuwanie klocka w dół
 			case 40:	bPlay ? dropPiece() : null; //main()
+			break;
+		
+			/* ### Akcje kontrolowane myszą ### */
+			case "init":
+				//TODO: nie jestem pewien, czy jest to w ogóle akcja do obsłużenia w kontrolerze
+			break;
+			case "newgame":
+			break;
+			case "pause":
+				//TODO: zastanowić się nad obsługą przycisku pauzy
+			break;
+			case "resume":
+				//obsługa przycisku resume/back
+				//TODO: "Back" to będzie przycisk zamykający na górze okna ekranów takich jak O Tetrisie, Ustawienia, Codebase itp.
+				if(bGameOver) {
+					start();
+					controlGUIPrompts("newgame");
+				}
+				else {
+					togglePlay();
+					controlGUIPrompts("resume");
+				}
+			break;
+			case "endgame":
+				//obsługa przycisku "Zakończ grę"
+				bGameOver = true;
+				controlGUIPrompts("endgame");
+			break;
+			case "storehiscore":
+				//obsługa przycisku "Zapisz wynik" (pod koniec rozgrywki, gdy gracz będzie mógł zapisać swój wynik wsród najlepszych)
+			break;
+			case "settings":
+				//obsługa przycisku otwierającego ekran Ustawienia
+				bPlay ? togglePlay() : null;
+				controlGUIPrompts("settings");
+			break;
+			case "scoreboard":
+				//obsługa przycisku otwierającego ekran tablicy najlepszych wyników
+				bPlay ? togglePlay() : null;
+				controlGUIPrompts("scoreboard");
+			break;
+			case "rules":
+				//obsługa przycisku otwierającego ekran Zasady gry
+			break;
+			case "controls":
+				//obsługa przycisku otwierającego ekran klawiszologii
+			break;
+			case "about":
+				//obsługa przycisku otwierającego ekran artykułu o oryginalnym Tetrisie
+				bPlay ? togglePlay() : null;
+				controlGUIPrompts("about");
+				
+			break;
+			case "aboutapp":
+				//obsługa przycisku otwierającego ekran informacji o aplikacji
+				bPlay ? togglePlay() : null;
+				controlGUIPrompts("aboutapp");
+			break;
+			case "translate":
+				//obsługa przycisku otwierającego ekran dla tłumaczy
+			break;
+			case "codebase":
+				//obsługa przycisku otwierającego ekran informacji o bazie kodowej
+			break;
+			case "copyright":
+				//obsługa przycisku otwierającego ekran informacji o licencji
 			break;
 		}
 		/* TYLKO DLA DEBUGGERA!
@@ -1175,7 +1282,7 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		oPiecesTotal.firstChild.nodeValue = histogram.count; //aktualizacja licznika sumy wylosowanych klocków
 		
 		var tempPerc = 0,
-			threshold = 50; //TODO: aby obniżyć
+			threshold = 50; //dostosowanie wysokości wykresu
 		oK0.firstChild.nodeValue = histogram.quantity[0];
 		oP0.firstChild.nodeValue = Math.round(histogram.frequency[0]*100,2);
 		tempPerc = histogram.frequency[0]*100;
@@ -1305,39 +1412,53 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		//console.log("Orzeł wylądował!");
 		return;
 	},
-	controlGUIPrompts = function(action="") {
+	 controlGUIPrompts = function(action="") {
 		/*
 			Funkcja obsługi zachowania GUI dla takich zdarzeń i stanów gry jak pauza, wybór języka GUI, wybór tematu GUI itp.
 			
 			UWAGA! Funkcja przyjmuje następujące dane wejściowe:
 			1. Wyraźnie zadany argument action, JEŻELI wywołana jawnie w kodzie,
 			LUB
-			2. polega na wartości Element.hash, JEŻELI wywołana za pomocą procedury obsługi zdarzenia jako funkcja do obsługi zdarzenia.
+			2. [DEPRECATED] polega na wartości Element.hash, JEŻELI wywołana za pomocą procedury obsługi zdarzenia jako funkcja do obsługi zdarzenia.
 		*/
 		
 		var hash = this.hash;
-		/*UWAGA! this odnosi się tutaj do węzła (elementu), który wywołał funkcję jako argument obsługi zdarzenia (Element.addEventListener)
+		/* [DEPRECATED] (2.)
+		UWAGA! this odnosi się tutaj do węzła (elementu), który wywołał funkcję jako argument obsługi zdarzenia (Element.addEventListener)
 		*/
 
 		if(typeof hash == "string") {
-			action = hash.substring(1);
+			//[DEPRECATED] (2.)
+			action = hash.substring(1); //usuwamy znak "#"
 		}
 		
 		// ### Czyszczenie stanu ekranów
 		oInitScreen.setAttribute("mode", "off");
 		oPauseScreen.setAttribute("mode", "off");
 		oEndScreen.setAttribute("mode", "off");
+		oStoreHiscore.setAttribute("mode", "off");
+		oSettings.setAttribute("mode", "off");
+		oScoreboard.setAttribute("mode", "off");
+		oRules.setAttribute("mode", "off");
+		oControls.setAttribute("mode", "off");
+		oAbout.setAttribute("mode", "off");
+		oAboutApp.setAttribute("mode", "off");
+		oTranslate.setAttribute("mode", "off");
+		oCodebase.setAttribute("mode", "off");
+		oCopyright.setAttribute("mode", "off");
 		
 		/* ### Lista obsługiwanych ekranów dla zdarzeń ### */
+		oOverlay.setAttribute("mode", "on");
+		
 		switch(action) {
-			case "init": ; //ekran powitalny gry zaraz po intrze (TODO: intro gry)
-				oOverlay.setAttribute("mode", "on");
+			case "init": //ekran powitalny gry zaraz po intrze (TODO: intro gry)
+				oOverlay.setAttribute("mode", "off");
 				oTicker.firstChild.nodeValue = oGamePrompts.newGame;
 				oTicker.setAttribute("mode", "on");
 				oInitScreen.setAttribute("mode", "on");
 			break;
 			
-			case "newgame": ; //stan gry: nowa runda rozgrywki (pierwsza lub kolejna)
+			case "newgame": //stan gry: nowa runda rozgrywki (pierwsza lub kolejna)
 			//TODO: zaprojektować przepływ sterowania od stanu "init"/"endgame" do stanu "newgame"
 				oOverlay.setAttribute("mode", "off");
 				oTicker.setAttribute("mode", "off");
@@ -1351,49 +1472,79 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 				oTicker.setAttribute("mode", "on");
 				oPauseScreen.setAttribute("mode", "on");
 			break;
-						
-			case "resume": ; //grę wznowiono po pauzie
+					
+			case "resume": //grę wznowiono po pauzie
 				oWell.style.display = "block";
 				oOverlay.setAttribute("mode", "off");
 				oTicker.setAttribute("mode", "off");
 				oPauseScreen.setAttribute("mode", "off");
 			break;
 			
-			case "endgame": ; //gra się zakończyła
+			case "endgame": //gra się zakończyła
 				oOverlay.setAttribute("mode", "on");
 				oTicker.firstChild.nodeValue = oGamePrompts.gameOver;
 				oTicker.setAttribute("mode", "on");
 				oEndScreen.setAttribute("mode", "on");
 			break;
 			
-			case "storehiscore": ; //wpisz się na listę najlepszych wyników
+			case "storehiscore": //wpisz się na listę najlepszych wyników
+				oTicker.firstChild.nodeValue = oGamePrompts.pause;
+				oTicker.setAttribute("mode", "on");
+				oStoreHiscore.setAttribute("mode", "on");
 			break;
 			
-			case "settings": ; //pokaż ekran ustawień
+			case "settings": //pokaż ekran ustawień
+				oTicker.firstChild.nodeValue = oGamePrompts.settings;
+				oTicker.setAttribute("mode", "on");
+				oSettings.setAttribute("mode", "on");
 			break;
 			
-			case "scoreboard": ; //pokaż tablicę najlepszych wyników
+			case "scoreboard": //pokaż tablicę najlepszych wyników
+				oTicker.firstChild.nodeValue = oGamePrompts.pause;
+				oTicker.setAttribute("mode", "on");
+				oScoreboard.setAttribute("mode", "on");
 			break;
 			
-			case "rules": ; //pokaż zasady gry
+			case "rules": //pokaż zasady gry
+				oTicker.firstChild.nodeValue = oGamePrompts.pause;
+				oTicker.setAttribute("mode", "on");
+				oRules.setAttribute("mode", "on");
 			break;
 
-			case "controls": ; //pokaż klawiszologię
+			case "controls": //pokaż klawiszologię
+				oTicker.firstChild.nodeValue = oGamePrompts.pause;
+				oTicker.setAttribute("mode", "on");
+				oControls.setAttribute("mode", "on");
 			break;
 			
-			case "about": ; //pokaż artykuł o oryginalnym Tetrisie
+			case "about": //pokaż artykuł o oryginalnym Tetrisie
+				oTicker.firstChild.nodeValue = oGamePrompts.pause;
+				oTicker.setAttribute("mode", "on");
+				oAbout.setAttribute("mode", "on");
 			break;
 			
-			case "aboutapp": ; //pokaż info o tej aplikacji
+			case "aboutapp": //pokaż info o tej aplikacji
+				oTicker.firstChild.nodeValue = oGamePrompts.pause;
+				oTicker.setAttribute("mode", "on");
+				oAboutApp.setAttribute("mode", "on");
 			break;
 			
-			case "translate": ; //pokaż ekran zachęcający do przetłumaczenia aplikacji
+			case "translate": //pokaż ekran zachęcający do przetłumaczenia aplikacji
+				oTicker.firstChild.nodeValue = oGamePrompts.pause;
+				oTicker.setAttribute("mode", "on");
+				oTranslate.setAttribute("mode", "on");
 			break;
 			
-			case "codebase": ; //pokaż ekran z informacją o kodzie do pobrania
+			case "codebase": //pokaż ekran z informacją o kodzie do pobrania
+				oTicker.firstChild.nodeValue = oGamePrompts.pause;
+				oTicker.setAttribute("mode", "on");
+				oCodebase.setAttribute("mode", "on");
 			break;
 			
-			case "copyright": ; //pokaż ekran z informacją o licencji
+			case "copyright": //pokaż ekran z informacją o licencji
+				oTicker.firstChild.nodeValue = oGamePrompts.pause;
+				oTicker.setAttribute("mode", "on");
+				oCopyright.setAttribute("mode", "on");
 			break;
 		}
 		return;
@@ -1406,18 +1557,19 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		if(bPlay) {
 			//jeśli rozgrywka trwa, pauzuj ją!
 			clearInterval(iGravityInterval);
-			/* Następujace funkcje zostaną użyte, gdy będą działać poprawnie:
+			/* TODO
+			Następujace funkcje zostaną użyte, gdy będą działać poprawnie:
 				takeWellSnapshot(); 
 				toggleWell(true);
 			*/
-			controlGUIPrompts("pause");
+			//TODO: wyrzucić wywołania controlGUIPrompts() stąd i wrzucić do keyboard Handler() JEŻELI będzie już w pełni obsługiwał zdarzenia klików z linków
+			//controlGUIPrompts("pause");
 			console.log("Pauza!");
 			bPlay = false;
 		}
 		else {
 			//jeśli spauzowano rozgrywkę, wznów ją!
 			controlGUIPrompts("resume");
-			//toggleWell(false); //zostanie użyta, gdy zacznie działać poprawnie!
 			main();
 			console.log("Grę wznowiono!");
 			bPlay = true;
@@ -1558,12 +1710,15 @@ controlGUIPrompts("init");
 
 
 /* ### Inicjalizacja obsługi zdarzeń ### */
-document.addEventListener("keydown", keyboardHandler, true);
-oStartGameButton.addEventListener("click", start, true);
+document.addEventListener("keydown", handleGameActions, true);
+//oStartGameButton.addEventListener("click", handleGameActions, true);
 
-var a=0;
+var a=0,
+	aGUIactions;
 do {
-	aGUIhrefs[a++].addEventListener("click", controlGUIPrompts, true);
+	//TODO: test run nowego pomysłu na kompleksową obsługę zdarzeń (akcji) w grze
+	aGUIhrefs[a++].addEventListener("click", handleGameActions, true);
+	//aGUIactions[a] = temp.hash.substring(1);
 }
 while(aGUIhrefs[a]);
 
