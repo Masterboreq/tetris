@@ -28,9 +28,11 @@ var oEvent = window.event,
 	aGUIhrefs = document.getElementsByClassName("gui-prompt"),
 	oStartGameButton = document.getElementById("start-game"),
 	oOverlay = document.getElementById("overlay"),
+	oPromptsWrapper = document.getElementById("prompts-wrapper"),
 	oTicker = document.getElementById("ticker"),
 	oInitScreen = document.getElementById("init-screen"),
 	oPauseScreen  = document.getElementById("pause-screen"),
+	oAbortScreen = document.getElementById("abort-screen"),
 	oEndScreen = document.getElementById("end-screen"),
 	oStoreHiscore = document.getElementById("store-hiscore"),
 	oSettings = document.getElementById("settings"),
@@ -41,7 +43,7 @@ var oEvent = window.event,
 	oAboutApp = document.getElementById("about-app"),
 	oTranslate = document.getElementById("translate"),
 	oCodebase = document.getElementById("codebase"),
-	oCopyright = document.getElementById("copyright"),
+	oLicence = document.getElementById("licence"),
 	
 	
 	//TODO: przypisać kontrolkom obsługę zdarzeń (klik) i skrót klawiaturowy
@@ -324,7 +326,10 @@ var oEvent = window.event,
 	/*
 		Flaga stanu rozgrywki: trwająca gra (TRUE); pauza (FALSE)
 	*/
-	
+	sPreviousGUIState = "init",
+	/*
+		Flaga stanu ekranu na potrzeby nawigacji po GUI. Przyjmuje zawsze wartość typu string zmiennej action ustawianej z poziomu funkcji handleGameActions().
+	*/
 	/*
 		aGamePrompts oraz aEndGamePromts przeniesiono do pliku *.lang.js
 	*/
@@ -779,7 +784,7 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 			 - zaawnsowanie poziomu osiągnięte przez gracza w grze
 			 - pozwól wpisać graczowi swoje inicjały w tabeli Hi-Score
 			 */
-			controlGUIPrompts("endgame");
+			handleGameActions("gameover");
 			bRestarted = true;
 			return;
 		}
@@ -905,59 +910,108 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		return false;
 	},
 	handleGameActions = function(oEvent) {
-		//TODO: przemianować nazwę funkcji na coś w rodzaju handleEvent lub handleGameActions
+		//TODO: dokumentacja funkcji
+		
 		var action = "";
 		
 		if(oEvent.type == "keydown") {
-			//obługa klawiatury dla ruchu klocków
+			/* ### Translacja zdefiniowanych zdarzeń klawiatury na akcje gry ### */
 			action = oEvent.keyCode;
-		}
-		else if(oEvent.type == "click") {
-			//obługa myszy dla reszty GUI
-			action = oEvent.target.hash;
-			action = action.substring(1); //usuwamy znak "#"
-		}
-		else {
-			//TODO: się zobaczy:)
-		}
-		console.log("handleGameActions: "+action);
-		
-		switch(action) {
-			/* ### Akcje kontrolowane klawiaturą ### */
-			//spacja
-			case 32:	
-				if(bGameOver) {
-					start();
-					controlGUIPrompts("newgame");
-				}
-				else {
-					togglePlay();
+
+			switch(action) {
+				//obsługa Esc (wyjdź lub cofnij do poprzedniego stanu)
+				case 27:
+					action = "goback";
+				break;
+				//spacja
+				case 32:
+					if(bGameOver) {
+						action = "newgame";
+					}
+					else {
+						togglePlay();
+					}
 					if(bPlay) {
 						controlGUIPrompts("resume");
 					}
 					else {
 						controlGUIPrompts("pause");
 					}
+				break;
+				//Kursor w lewo - Przesuwanie klocka w lewo
+				case 37:	bPlay ? action = "moveleft" : null;
+				break;
+				//Kursor w górę - Obrót klocka (zawsze przeciwnie do ruchu wskazówek zegara)
+				case 38:	bPlay ? action = "flip" : null;
+				break;
+				//Kursor w lewo - Przesuwanie klocka w prawo
+				case 39: bPlay ? action = "moveright" : null;
+				break;
+				//Kursor w dół
+				case 40:	bPlay ? action = "drop" : null;
+				break;
+			}
+		}
+		else if(oEvent.type == "click") {
+			//obługa myszy dla reszty GUI
+			// akcje kontrolowane myszą konwertowane są 1:1 na akcje gry
+			action = oEvent.target.hash;
+			action = action.substring(1); //usuwamy znak "#"
+		}
+		else {
+			//tryb działania funkcji, gdy jako parametr zostanie przekazany ciąg znaków, a nie obiekt wbudowany Event
+			if(arguments[0]) {
+				switch(arguments[0]) {
+					case "init":
+						action = "init";
+					break;
+					case "endgame":
+						action = "endgame";
+					break;
+					case "gameover":
+						//ten zapis jest potrzebny, ponieważ main() komunikuje zakończenie rozgrywki wywołując handleGameActions("gameover")
+						action = "gameover";
+					break;
 				}
-			break;
+			}
+		}
+		
+		/*TU SKOŃCZYŁEŚ! TODO: zastanowić się nad kolejnym, przejściowym stopniem kontrolera, w któym będą podejmowane decyzje na podstawie:
+		 - flag aplikacji,
+		 - flagi sPreviousGUIState.
+		Zastanowić się nad zgrabnym ujęciem obsługi przycisków typu goback i proceed; czy mogą zastąpić niektóre nazwane akcje typu endgame, resume itp.
+		*/
+
+		
+		console.log("handleGameActions: "+action);
+		switch(action) {
+			/* ### Akcje gry ### */
+
 			//Przesuwanie klocka w lewo
-			case 37:	bPlay ? stepSide(0) : null;
+			case "moveleft": bPlay ? stepSide(0) : null;
 			break;
 			//Obrót klocka (zawsze przeciwnie do ruchu wskazówek zegara)
-			case 38:	bPlay ? flipPiece() : null;
+			case "flip": bPlay ? flipPiece() : null;
 			break;
 			//Przesuwanie klocka w prawo
-			case 39: bPlay ? stepSide(1) : null;
+			case "moveright": bPlay ? stepSide(1) : null;
 			break;
-			//Przesuwanie klocka w dół
-			case 40:	bPlay ? dropPiece() : null; //main()
+			//Hard drop klocka
+			case "drop": bPlay ? dropPiece() : null;
 			break;
 		
-			/* ### Akcje kontrolowane myszą ### */
+			case "goback":
+			break;
+			case "proceed":
+			break;
 			case "init":
-				//TODO: nie jestem pewien, czy jest to w ogóle akcja do obsłużenia w kontrolerze
+				action = 0;
+				sPreviousGUIState = null;
+				controlGUIPrompts("init");
 			break;
 			case "newgame":
+				start();
+				controlGUIPrompts("newgame");
 			break;
 			case "pause":
 				//TODO: zastanowić się nad obsługą przycisku pauzy
@@ -975,12 +1029,18 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 				}
 			break;
 			case "endgame":
-				//obsługa przycisku "Zakończ grę"
-				bGameOver = true;
+				//obsługa przycisku "Zakończ grę" i monitu potwierdzenia
+				bPlay ? togglePlay() : null;
 				controlGUIPrompts("endgame");
+			break;
+			case "gameover":
+				//obsługa stanu "Zakończ grę"
+				bGameOver = true;
+				controlGUIPrompts("gameover");
 			break;
 			case "storehiscore":
 				//obsługa przycisku "Zapisz wynik" (pod koniec rozgrywki, gdy gracz będzie mógł zapisać swój wynik wsród najlepszych)
+				bGameOver ?controlGUIPrompts("storehiscore") : null;
 			break;
 			case "settings":
 				//obsługa przycisku otwierającego ekran Ustawienia
@@ -994,9 +1054,13 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 			break;
 			case "rules":
 				//obsługa przycisku otwierającego ekran Zasady gry
+				bPlay ? togglePlay() : null;
+				controlGUIPrompts("rules");
 			break;
 			case "controls":
 				//obsługa przycisku otwierającego ekran klawiszologii
+				bPlay ? togglePlay() : null;
+				controlGUIPrompts("controls");
 			break;
 			case "about":
 				//obsługa przycisku otwierającego ekran artykułu o oryginalnym Tetrisie
@@ -1011,19 +1075,29 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 			break;
 			case "translate":
 				//obsługa przycisku otwierającego ekran dla tłumaczy
+				bPlay ? togglePlay() : null;
+				controlGUIPrompts("translate");
 			break;
 			case "codebase":
 				//obsługa przycisku otwierającego ekran informacji o bazie kodowej
+				bPlay ? togglePlay() : null;
+				controlGUIPrompts("codebase");
 			break;
 			case "copyright":
 				//obsługa przycisku otwierającego ekran informacji o licencji
+				bPlay ? togglePlay() : null;
+				controlGUIPrompts("copyright");
 			break;
 		}
+		if(action == "newgame" || action == "") {
+			sPreviousGUIState = action;
+		}
+		
 		/* TYLKO DLA DEBUGGERA!
 			Funkcja pozwala wybrać rodzaj pojawiającego się klocka.
 			Tylko dla klawiatury
 			TODO: usunąć w wersji produkcyjnej!
-		*/
+		
 		piece = oPieceO; //zabezpieczenie na wypadek braku przekazanego argumentu  lub przekazania błędnego
 		switch(oEvent.key) {
 			case "o": oActualPiece = oPieceO;
@@ -1061,6 +1135,7 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 			spawnPiece();
 			break;
 		}
+		*/
 		return;
 	},
 
@@ -1422,19 +1497,10 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 			2. [DEPRECATED] polega na wartości Element.hash, JEŻELI wywołana za pomocą procedury obsługi zdarzenia jako funkcja do obsługi zdarzenia.
 		*/
 		
-		var hash = this.hash;
-		/* [DEPRECATED] (2.)
-		UWAGA! this odnosi się tutaj do węzła (elementu), który wywołał funkcję jako argument obsługi zdarzenia (Element.addEventListener)
-		*/
-
-		if(typeof hash == "string") {
-			//[DEPRECATED] (2.)
-			action = hash.substring(1); //usuwamy znak "#"
-		}
-		
 		// ### Czyszczenie stanu ekranów
 		oInitScreen.setAttribute("mode", "off");
 		oPauseScreen.setAttribute("mode", "off");
+		oAbortScreen.setAttribute("mode", "off");
 		oEndScreen.setAttribute("mode", "off");
 		oStoreHiscore.setAttribute("mode", "off");
 		oSettings.setAttribute("mode", "off");
@@ -1445,106 +1511,123 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		oAboutApp.setAttribute("mode", "off");
 		oTranslate.setAttribute("mode", "off");
 		oCodebase.setAttribute("mode", "off");
-		oCopyright.setAttribute("mode", "off");
+		oLicence.setAttribute("mode", "off");
 		
 		/* ### Lista obsługiwanych ekranów dla zdarzeń ### */
-		oOverlay.setAttribute("mode", "on");
+		oOverlay.setAttribute("mode", "off");
+		oPromptsWrapper.setAttribute("mode", "on");
+		oTicker.setAttribute("mode", "on");
 		
 		switch(action) {
 			case "init": //ekran powitalny gry zaraz po intrze (TODO: intro gry)
-				oOverlay.setAttribute("mode", "off");
 				oTicker.firstChild.nodeValue = oGamePrompts.newGame;
-				oTicker.setAttribute("mode", "on");
+				//oOverlay.setAttribute("mode", "off");
+				//oPromptsWrapper.setAttribute("mode", "on");
+				//oTicker.setAttribute("mode", "on");
 				oInitScreen.setAttribute("mode", "on");
 			break;
 			
 			case "newgame": //stan gry: nowa runda rozgrywki (pierwsza lub kolejna)
 			//TODO: zaprojektować przepływ sterowania od stanu "init"/"endgame" do stanu "newgame"
 				oOverlay.setAttribute("mode", "off");
+				oPromptsWrapper.setAttribute("mode", "off");
 				oTicker.setAttribute("mode", "off");
 				oInitScreen.setAttribute("mode", "off");
 			break;
 			
 			case "pause": //grę spauzowano
 				oWell.style.display = "none";
-				oOverlay.setAttribute("mode", "on");
+				//oOverlay.setAttribute("mode", "on");
+				//oPromptsWrapper.setAttribute("mode", "on");
+				//oTicker.setAttribute("mode", "on");
 				oTicker.firstChild.nodeValue = oGamePrompts.pause;
-				oTicker.setAttribute("mode", "on");
 				oPauseScreen.setAttribute("mode", "on");
 			break;
 					
 			case "resume": //grę wznowiono po pauzie
 				oWell.style.display = "block";
 				oOverlay.setAttribute("mode", "off");
+				oPromptsWrapper.setAttribute("mode", "off");
 				oTicker.setAttribute("mode", "off");
 				oPauseScreen.setAttribute("mode", "off");
 			break;
 			
-			case "endgame": //gra się zakończyła
+			case "endgame": //monit o potwierdzenie zakończenia gry
 				oOverlay.setAttribute("mode", "on");
+				//oPromptsWrapper.setAttribute("mode", "on");
+				//oTicker.setAttribute("mode", "on");
+				oTicker.firstChild.nodeValue = oGamePrompts.abortGameTicker;
+				oAbortScreen.setAttribute("mode", "on");
+			break;
+			
+			case "gameover": //gra się zakończyła
+				oOverlay.setAttribute("mode", "on");
+				//oPromptsWrapper.setAttribute("mode", "on");
+				//oTicker.setAttribute("mode", "on");
 				oTicker.firstChild.nodeValue = oGamePrompts.gameOver;
-				oTicker.setAttribute("mode", "on");
 				oEndScreen.setAttribute("mode", "on");
 			break;
 			
 			case "storehiscore": //wpisz się na listę najlepszych wyników
-				oTicker.firstChild.nodeValue = oGamePrompts.pause;
-				oTicker.setAttribute("mode", "on");
+				oTicker.firstChild.nodeValue = oGamePrompts.enterHiScore;
+				//oTicker.setAttribute("mode", "on");
 				oStoreHiscore.setAttribute("mode", "on");
 			break;
 			
 			case "settings": //pokaż ekran ustawień
+				oOverlay.setAttribute("mode", "on");
 				oTicker.firstChild.nodeValue = oGamePrompts.settings;
-				oTicker.setAttribute("mode", "on");
+				//oTicker.setAttribute("mode", "on");
+				//oPromptsWrapper.setAttribute("mode", "on");
 				oSettings.setAttribute("mode", "on");
 			break;
 			
 			case "scoreboard": //pokaż tablicę najlepszych wyników
-				oTicker.firstChild.nodeValue = oGamePrompts.pause;
-				oTicker.setAttribute("mode", "on");
+				oTicker.firstChild.nodeValue = oGamePrompts.showHiScores;
+				//oTicker.setAttribute("mode", "on");
 				oScoreboard.setAttribute("mode", "on");
 			break;
 			
 			case "rules": //pokaż zasady gry
-				oTicker.firstChild.nodeValue = oGamePrompts.pause;
-				oTicker.setAttribute("mode", "on");
+				oTicker.firstChild.nodeValue = oGamePrompts.rules;
+				//oTicker.setAttribute("mode", "on");
 				oRules.setAttribute("mode", "on");
 			break;
 
 			case "controls": //pokaż klawiszologię
-				oTicker.firstChild.nodeValue = oGamePrompts.pause;
-				oTicker.setAttribute("mode", "on");
+				oTicker.firstChild.nodeValue = oGamePrompts.controls;
+				//oTicker.setAttribute("mode", "on");
 				oControls.setAttribute("mode", "on");
 			break;
 			
 			case "about": //pokaż artykuł o oryginalnym Tetrisie
-				oTicker.firstChild.nodeValue = oGamePrompts.pause;
-				oTicker.setAttribute("mode", "on");
+				oTicker.firstChild.nodeValue = oGamePrompts.about;oPromptsWrapper.setAttribute("mode", "opaque");
+				//oTicker.setAttribute("mode", "on");
 				oAbout.setAttribute("mode", "on");
 			break;
 			
 			case "aboutapp": //pokaż info o tej aplikacji
-				oTicker.firstChild.nodeValue = oGamePrompts.pause;
-				oTicker.setAttribute("mode", "on");
+				oTicker.firstChild.nodeValue = oGamePrompts.aboutapp;
+				//oTicker.setAttribute("mode", "on");
 				oAboutApp.setAttribute("mode", "on");
 			break;
 			
 			case "translate": //pokaż ekran zachęcający do przetłumaczenia aplikacji
-				oTicker.firstChild.nodeValue = oGamePrompts.pause;
-				oTicker.setAttribute("mode", "on");
+				oTicker.firstChild.nodeValue = oGamePrompts.translate;
+				//oTicker.setAttribute("mode", "on");
 				oTranslate.setAttribute("mode", "on");
 			break;
 			
 			case "codebase": //pokaż ekran z informacją o kodzie do pobrania
-				oTicker.firstChild.nodeValue = oGamePrompts.pause;
-				oTicker.setAttribute("mode", "on");
+				oTicker.firstChild.nodeValue = oGamePrompts.codebase;
+				//oTicker.setAttribute("mode", "on");
 				oCodebase.setAttribute("mode", "on");
 			break;
 			
 			case "copyright": //pokaż ekran z informacją o licencji
-				oTicker.firstChild.nodeValue = oGamePrompts.pause;
-				oTicker.setAttribute("mode", "on");
-				oCopyright.setAttribute("mode", "on");
+				oTicker.firstChild.nodeValue = oGamePrompts.copyright;
+				//oTicker.setAttribute("mode", "on");
+				oLicence.setAttribute("mode", "on");
 			break;
 		}
 		return;
@@ -1569,7 +1652,7 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		}
 		else {
 			//jeśli spauzowano rozgrywkę, wznów ją!
-			controlGUIPrompts("resume");
+			//controlGUIPrompts("resume");
 			main();
 			console.log("Grę wznowiono!");
 			bPlay = true;
@@ -1706,7 +1789,7 @@ oTest7.value = oTestEnvironment.scenarios[6][0]; //w ten sposób także działa
 
 //loadTest(6);
 
-controlGUIPrompts("init");
+handleGameActions(sPreviousGUIState); // sPreviousGUIState="init", ustawione na początku skryptu przy inicjalizacji flagi sPreviousGUIState
 
 
 /* ### Inicjalizacja obsługi zdarzeń ### */

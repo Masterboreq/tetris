@@ -42,14 +42,25 @@ var oLang = {
 	
 	oGamePrompts = {
 		pause: "Pauza",
+		confirmAbortGame: "Czy na pewno chcesz zakończyć grę?",
+		abortGameTicker: "Potwierdź wyjście",
 		gameOver: "Koniec gry",
 		newGame: "Nowa gra",
 		beginGame: "Naciśnij spację, aby rozpocząć grę!",
 		endGame: "Czy chcesz zakończyć grę?",
+		enterHiScore: "Zapisz swój wynik",
+		showHiScores: "Sala chwały",
+		rules: "Zasady gry",
+		controls: "Klawiszologia",
+		about: "O grze Tetris®",
+		aboutapp: "O tej aplikacji",
+		translate: "Przetłumacz grę",
+		codebase: "Kod źródłowy gry",
+		copyright: "Licencja",
 		settings: "Ustawienia"
 	},
 	
-	aEndGamePromts = [
+	aEndGamePrompts = [
 		"Brawo! Mocne 2/10, hahaha!",
 		"Nie no! Tak złej gry to dawno nie widziałem!",
 		"Twój debiut? Nie?! No cóż...",
