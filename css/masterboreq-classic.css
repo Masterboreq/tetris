@@ -239,31 +239,37 @@ div#well div div:first-child {
 /*TODO: do poprawy 
  .gui-prompt,
  # footer *
-*/
+
 .gui-prompt {
 	padding: 3px 5px;
 	border-radius: 4px;
 }
 
-.gui-prompt:hover {
-	background-color: rgb(225, 183, 11);
+.gui-prompts {
+	background-color: rgba(225, 225, 225, 0.9);
 	color: #000;
 }
-
+*/
 #footer {
-	/* Specjalnie pozostawione puste */
+	padding: 0px 5px;
+	border-radius: 4px;
 }
 
-/*#footer a:hover, #footer ul li {
+#footer ul li {
 	padding: 3px 5px;
 	border-radius: 4px;
 }
 #footer a:hover, #footer ul li:hover {
 	background-color: rgb(225, 183, 11);
 	color: #000;
-}*/
+}/**/
 #footer ul li:hover a {
 	color: inherit;
+}
+
+#copyright {
+	padding: 3px 5px;
+	border-radius: 4px;
 }
 
 /* Overlay ogólnego zastosowania pod wyświetlanie komunikatów */
@@ -274,12 +280,35 @@ div#well div div:first-child {
 	display: none;
 }
 #overlay[mode="on"] {
-	display: none;
+	display: block;
 } /* Tutaj możliwe do zaimplementowania różne inne wartości atrybutu mode dla #overlay*/
+
+#prompts-wrapper {
+	background: none;
+	color: #000;
+}
+#prompts-wrapper[mode="off"] {
+	display: none;
+}
+#prompts-wrapper[mode="on"] {
+	background: none;
+	display: block;
+}
+#prompts-wrapper[mode="opaque"] {
+	background-color: rgba(225, 225, 225, 0.9);
+	display: block;
+}
+
+#prompts-wrapper[mode="on"] > div#goback {
+	/*TODO: nie działa! */
+	display: block;
+}
 
 /* Ticker ogólnego zastosowania pod wyświetlanie komunikatów */
 #ticker {
 	border: 1px solid #000;
+	width: 50%;
+	height: 50px;
 	background: rgba(255,255,255, .95);
 	font-family: sans-serif;
 	font-size: 36px;
@@ -292,9 +321,32 @@ div#well div div:first-child {
 	display: block;
 }
 
+.gui-prompts {
+	background: rgba(0,0,0, .89);
+	color: #fff;
+}
+
+.gui-buttons {
+	width: 190px;
+	height: 40px;
+	margin: 20px auto 0% auto;
+	border-radius: 3px;
+	color: #000;
+	background-color: #fff;
+	text-align: center;
+	font-size: 22px;
+	font-weight: bold;
+	padding-top: 10px;
+}
+.go-buttons:hover {
+	background-color: #0e0;
+}
+.back-buttons:hover {
+	background-color: #e00;
+}
+
 /* Ekran początkowy zaraz po intrze */
 #init-screen {
-	background-color: #900;
 }
 #init-screen[mode="off"] {
 	display: none;
@@ -305,7 +357,7 @@ div#well div div:first-child {
 
 /* Ekran pauzy */
 #pause-screen {
-	background-color: #90a;
+	
 }
 #pause-screen[mode="off"] {
 	display: none;
@@ -315,7 +367,17 @@ div#well div div:first-child {
 	display: block;
 }
 
-/* Ekran końca gry */
+/* Ekrany końca gry */
+#abort-screen {
+	background-color: #030;
+}
+#abort-screen[mode="off"] {
+	display: none;
+}
+#abort-screen[mode="on"] {
+	display: block;
+}
+
 #end-screen {
 	background-color: #050;
 }
@@ -323,6 +385,119 @@ div#well div div:first-child {
 	display: none;
 }
 #end-screen[mode="on"] {
+	display: block;
+}
+
+/* Ekran dokonania nowego wpisu do Hi-score */
+#store-hiscore {
+	background-color: #350;
+}
+#store-hiscore[mode="off"] {
+	display: none;
+}
+#store-hiscore[mode="on"] {
+	display: block;
+}
+
+/* Ekran ustawień gry */
+#settings {
+	background-color: #065;
+}
+#settings[mode="off"] {
+	display: none;
+}
+#settings[mode="on"] {
+	display: block;
+}
+
+/* Ekran tablicy Hi-Score */
+#scoreboard {
+	background-color: #123;
+}
+#scoreboard[mode="off"] {
+	display: none;
+}
+#scoreboard[mode="on"] {
+	display: block;
+}
+
+/* Ekran zasad gry */
+#rules {
+	background-color: #456;
+}
+#rules[mode="off"] {
+	display: none;
+}
+#rules[mode="on"] {
+	display: block;
+}
+
+/* Ekran klawiszologii */
+#controls {
+	background-color: #564;
+}
+#controls[mode="off"] {
+	display: none;
+}
+#controls[mode="on"] {
+	display: block;
+}
+
+/* Ekran opisu gry Tetris */
+#about {
+	background-color: #797;
+	width: 95%;
+	height: 480px;
+	overflow-x: hidden;
+}
+#about[mode="off"] {
+	display: none;
+}
+#about[mode="on"] {
+	display: block;
+}
+
+/* Ekran "O aplikacji" */
+#about-app {
+	background-color: #798;
+}
+#about-app[mode="off"] {
+	display: none;
+}
+#about-app[mode="on"] {
+	display: block;
+}
+
+/* Ekran tłumaczeń */
+#translate {
+	background-color: #145;
+}
+#translate[mode="off"] {
+	display: none;
+}
+#translate[mode="on"] {
+	display: block;
+}
+
+/* Info o kodzie źródłowym */
+#codebase {
+	background-color: #798;
+}
+#codebase[mode="off"] {
+	display: none;
+}
+#codebase[mode="on"] {
+	display: block;
+}
+
+/* Ekran licencji */
+#licence {
+	background-color: #798;
+}
+#licence[mode="off"] {
+	display: none;
+}
+#licence[mode="on"] {
 	display: block;
 }
 
