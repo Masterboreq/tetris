@@ -345,13 +345,23 @@ div#well div div:first-child {
 	background-color: #e00;
 }
 
-/* Ekran początkowy zaraz po intrze */
+/* Ekran początkowy nowego gracza */
 #init-screen {
 }
 #init-screen[mode="off"] {
 	display: none;
 }
 #init-screen[mode="on"] {
+	display: block;
+}
+
+/* Ekran powitalny dla stałego gracza */
+#continue-screen {
+}
+#continue-screen[mode="off"] {
+	display: none;
+}
+#continue-screen[mode="on"] {
 	display: block;
 }
 
