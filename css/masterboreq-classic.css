@@ -25,6 +25,7 @@ a {
 	border: 1px solid black;
 	color: #fff;
 	background-color: rgba(10,10,10, .85);
+	background-image: url(../img/footer.jpg);
 }
 
 #toolbar {
