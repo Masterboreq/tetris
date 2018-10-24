@@ -30,6 +30,7 @@ var oEvent = window.event,
 	oOverlay = document.getElementById("overlay"),
 	oPromptsWrapper = document.getElementById("prompts-wrapper"),
 	oTicker = document.getElementById("ticker"),
+	oContinueScreen = document.getElementById("continue-screen"),
 	oInitScreen = document.getElementById("init-screen"),
 	oPauseScreen  = document.getElementById("pause-screen"),
 	oAbortScreen = document.getElementById("abort-screen"),
@@ -845,7 +846,7 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		/*
 			Funkcja odpowiada za natychmiastowy zrzut klocka do miejsca jego lądowania w najniższym możliwym punkcie w danych warunkach rozgrywki.
 
-		### Algorytm A:v"Głęboka detekcja kolizji" - propozycja ###
+		### [DEPRECATED] Algorytm A:"Głęboka detekcja kolizji" - propozycja ###
 		1. Skopiuj obraz matrycy klocka oActualPiece[actualOrientation] do aActualMatrix
 		2. POMYSŁ na dalszy krok:
 		 - odfiltruj z aActualMatrix tylko wypełnione segmenty tworząc tym samym nową wersję aActualMatrix zawierającą informację tylko o wypełnionych segmentach. Tutaj dokonaj transkrybcji współrzędnych na rzeczywiste.
@@ -913,29 +914,49 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		//TODO: dokumentacja funkcji
 		
 		var action = "";
+
+		/* ### 1. stopień kontrolera: przechwytywanie zdarzeń ### */
 		
+		/* ### 1.1 Translacja zdefiniowanych zdarzeń klawiatury na akcje gry ### */
 		if(oEvent.type == "keydown") {
-			/* ### Translacja zdefiniowanych zdarzeń klawiatury na akcje gry ### */
 			action = oEvent.keyCode;
 
 			switch(action) {
 				//obsługa Esc (wyjdź lub cofnij do poprzedniego stanu)
 				case 27:
-					action = "goback";
+					if(bPlay && !bGameOver) {
+						//p-podobnie warunkiem mogłoby być bPlay==true
+						//monit o potwierdzenie zakończenia bieżącej rozgrywki
+						action = "endgame";
+					}
+					/*else if(sPreviousGUIState == "resume") {
+						//p-podobnie warunkiem mogłoby być bPlay==false
+						action = "resume";
+					}*/
+					else if(bGameOver) {
+						break;
+					}
+					else {
+						action = "resume";
+					}
 				break;
 				//spacja
 				case 32:
-					if(bGameOver) {
+					if(bGameOver && sPreviousGUIState=="init") {
 						action = "newgame";
+						break;
 					}
-					else {
-						togglePlay();
+					else if(bGameOver && sPreviousGUIState=="continue") {
+						action = "continue";
+						break;
 					}
 					if(bPlay) {
-						controlGUIPrompts("resume");
+						action = "pause";
+						//controlGUIPrompts("resume");
 					}
 					else {
-						controlGUIPrompts("pause");
+						action = "resume";
+						//controlGUIPrompts("pause");
 					}
 				break;
 				//Kursor w lewo - Przesuwanie klocka w lewo
@@ -952,18 +973,43 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 				break;
 			}
 		}
+		/* ### 1.2 Translacja zdarzeń "click" na akcje gry ### */
 		else if(oEvent.type == "click") {
-			//obługa myszy dla reszty GUI
-			// akcje kontrolowane myszą konwertowane są 1:1 na akcje gry
 			action = oEvent.target.hash;
 			action = action.substring(1); //usuwamy znak "#"
+			switch(action) {
+				//obsługa polecenia proceed
+				case "proceed":
+					if(sPreviousGUIState == "endgame") {
+						//p-podobnie warunkiem mogłoby być bPlay==true
+						//monit o potwierdzenie zakończenia bieżącej rozgrywki
+						action = "gameover";
+					}
+					/*else if(sPreviousGUIState == "resume") {
+						//p-podobnie warunkiem mogłoby być bPlay==false
+						action = "resume";
+					}*/
+					else if(bGameOver && sPreviousGUIState=="init") {
+						action = "newgame";
+						break;
+					}
+					else if(bGameOver && sPreviousGUIState=="continue") {
+						action = "continue";
+						break;
+					}
+				break;
+			}
 		}
+		/* ### 1.3 Translacja argumentów przekazanych do funkcji na akcje gry ### */
 		else {
 			//tryb działania funkcji, gdy jako parametr zostanie przekazany ciąg znaków, a nie obiekt wbudowany Event
 			if(arguments[0]) {
 				switch(arguments[0]) {
 					case "init":
 						action = "init";
+					break;
+					case "continue":
+						action = "continue";
 					break;
 					case "endgame":
 						action = "endgame";
@@ -976,17 +1022,11 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 			}
 		}
 		
-		/*TU SKOŃCZYŁEŚ! TODO: zastanowić się nad kolejnym, przejściowym stopniem kontrolera, w któym będą podejmowane decyzje na podstawie:
-		 - flag aplikacji,
-		 - flagi sPreviousGUIState.
-		Zastanowić się nad zgrabnym ujęciem obsługi przycisków typu goback i proceed; czy mogą zastąpić niektóre nazwane akcje typu endgame, resume itp.
-		*/
-
-		
+		/* ### 2. stopień kontrolera: obsługa akcji gry ### */
 		console.log("handleGameActions: "+action);
+		
+		/* ### Akcje gry ### */
 		switch(action) {
-			/* ### Akcje gry ### */
-
 			//Przesuwanie klocka w lewo
 			case "moveleft": bPlay ? stepSide(0) : null;
 			break;
@@ -1000,33 +1040,29 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 			case "drop": bPlay ? dropPiece() : null;
 			break;
 		
-			case "goback":
+			case "goback": //DEPRECATED: goback i proceed nie są akcjami gry, tylko poleceniami do kontrolera!
 			break;
-			case "proceed":
+			case "proceed"://DEPRECATED; j.w.
 			break;
 			case "init":
-				action = 0;
-				sPreviousGUIState = null;
+				//action = 0;
+				sPreviousGUIState = "init";
 				controlGUIPrompts("init");
 			break;
 			case "newgame":
 				start();
-				controlGUIPrompts("newgame");
+				controlGUIPrompts("resume");
 			break;
 			case "pause":
-				//TODO: zastanowić się nad obsługą przycisku pauzy
+				//TODO: zastanowić się nad obsługą przycisku pauzy w 1. stopniu (!) kontrolera
+				togglePlay();
+				controlGUIPrompts("pause");
 			break;
 			case "resume":
-				//obsługa przycisku resume/back
-				//TODO: "Back" to będzie przycisk zamykający na górze okna ekranów takich jak O Tetrisie, Ustawienia, Codebase itp.
-				if(bGameOver) {
-					start();
-					controlGUIPrompts("newgame");
-				}
-				else {
-					togglePlay();
-					controlGUIPrompts("resume");
-				}
+				//TODO: przenieść do 1. stopnia kontrolera: obsługa przycisku resume/back
+				//TODO: "Back" to będzie przycisk zamykający na górze okna ekranów takich jak O Tetrisie, Ustawienia, Codebase itp. (do 1. st. k.)
+				togglePlay();
+				controlGUIPrompts("resume");
 			break;
 			case "endgame":
 				//obsługa przycisku "Zakończ grę" i monitu potwierdzenia
@@ -1035,12 +1071,18 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 			break;
 			case "gameover":
 				//obsługa stanu "Zakończ grę"
+				/*TU SKOŃCZYŁEŚ
+				 TODO: zrobić przejście od ekranu Game Over do: 
+				  - "storehiscore"
+				  lub
+				  - "continue"
+				 */
 				bGameOver = true;
 				controlGUIPrompts("gameover");
 			break;
 			case "storehiscore":
 				//obsługa przycisku "Zapisz wynik" (pod koniec rozgrywki, gdy gracz będzie mógł zapisać swój wynik wsród najlepszych)
-				bGameOver ?controlGUIPrompts("storehiscore") : null;
+				bGameOver ? controlGUIPrompts("storehiscore") : null;
 			break;
 			case "settings":
 				//obsługa przycisku otwierającego ekran Ustawienia
@@ -1089,8 +1131,22 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 				controlGUIPrompts("copyright");
 			break;
 		}
-		if(action == "newgame" || action == "") {
-			sPreviousGUIState = action;
+		
+		/* ### 3. stopień kontrolera: moduł obsługi flagi sPreviousGUIState ### */
+		switch(action) {
+			case "newgame":
+				sPreviousGUIState = "init";
+			break;
+			case "init":
+				sPreviousGUIState = "init";
+			break;
+			case "endgame":
+				sPreviousGUIState = "endgame";
+			break;
+			default:
+			//domyślne przypisanie wartości zmiennej sPreviousGUIState
+			sPreviousGUIState = "resume";
+			break;
 		}
 		
 		/* TYLKO DLA DEBUGGERA!
@@ -1499,6 +1555,7 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		
 		// ### Czyszczenie stanu ekranów
 		oInitScreen.setAttribute("mode", "off");
+		oContinueScreen.setAttribute("mode", "off");
 		oPauseScreen.setAttribute("mode", "off");
 		oAbortScreen.setAttribute("mode", "off");
 		oEndScreen.setAttribute("mode", "off");
@@ -1519,7 +1576,7 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		oTicker.setAttribute("mode", "on");
 		
 		switch(action) {
-			case "init": //ekran powitalny gry zaraz po intrze (TODO: intro gry)
+			case "init": //ekran powitalny nowego gracza zaraz po intrze (TODO: intro gry)
 				oTicker.firstChild.nodeValue = oGamePrompts.newGame;
 				//oOverlay.setAttribute("mode", "off");
 				//oPromptsWrapper.setAttribute("mode", "on");
@@ -1527,7 +1584,15 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 				oInitScreen.setAttribute("mode", "on");
 			break;
 			
-			case "newgame": //stan gry: nowa runda rozgrywki (pierwsza lub kolejna)
+			case "continue": //ekran powitalny stałego gracza zaraz po intrze 
+				oTicker.firstChild.nodeValue = oGamePrompts.continueGame;
+				//oOverlay.setAttribute("mode", "off");
+				//oPromptsWrapper.setAttribute("mode", "on");
+				//oTicker.setAttribute("mode", "on");
+				oContinueScreen.setAttribute("mode", "on");
+			break;
+			
+			case "newgame": //[DEPRECATED: TO SAMO ROBI "resume"] stan gry: nowa runda rozgrywki (pierwsza lub kolejna)
 			//TODO: zaprojektować przepływ sterowania od stanu "init"/"endgame" do stanu "newgame"
 				oOverlay.setAttribute("mode", "off");
 				oPromptsWrapper.setAttribute("mode", "off");
