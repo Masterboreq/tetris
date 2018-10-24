@@ -30,7 +30,9 @@ var oLang = {
 		abortGameButton: "",
 		
 		/* Hiperłącza okna aplikacji */
-		aboutTetris: "O grze Tetris&trade;",
+		
+		//TODO: tak uszeregować atrybuty, żeby można było przypisać je w pętli do obiektów hiperłączy
+		aboutTetris: "O grze Tetris",
 		controls: "Sterowanie",
 		rules: "Zasady gry",
 		hiScoreTable: "Najlepsze wyniki",

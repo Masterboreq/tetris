@@ -735,7 +735,7 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		renderPiecePreview();
 		return false;
 	},
-	main = function() {
+	main = function(triggerGameOver=false) {
 		/*
 		Główna pętla gry:
 		 - wyzwala się ona rekurencyjnie poprzez window.setInterval(),
@@ -744,7 +744,11 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		
 		/* Sprawdź poziom i zaktualizouj prędkość opadania klocka */
 		//iActualLevel = oLevelSelector.value; //UWAGA! Brak zabezpieczenia przed debilami, którzy wpiszą np. 1000 lub -5!
-	
+		if(triggerGameOver) {
+			bGameOver = true;
+			bRestarted = true;
+			return;
+		}
 		iActualLevel = 1 + Math.floor((iRowCounter-1)/10); //TODO: należy pogodzić jakość tę linię z zapisami w setSpeed()
 		
 		setSpeed();
@@ -780,12 +784,14 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		if(bGameOver) {
 			clearInterval(iGravityInterval);
 			console.log("Game over!");
-			s = Math.ceil((Math.random()*1000))%5;
+			s = Math.ceil((Math.random()*1000))%5; //TODO: co poeta miał na myśli?!
+			
 			/*TODO: zachowaj stan gry:
 			 - zaawnsowanie poziomu osiągnięte przez gracza w grze
 			 - pozwól wpisać graczowi swoje inicjały w tabeli Hi-Score
 			 */
-			handleGameActions("gameover");
+			//
+			//handleGameActions("gameover");
 			bRestarted = true;
 			return;
 		}
@@ -950,6 +956,10 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 						action = "continue";
 						break;
 					}
+					else if(bGameOver && sPreviousGUIState=="gameover") {
+						action = "continue";
+						break;
+					}
 					if(bPlay) {
 						action = "pause";
 						//controlGUIPrompts("resume");
@@ -1015,7 +1025,7 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 						action = "endgame";
 					break;
 					case "gameover":
-						//ten zapis jest potrzebny, ponieważ main() komunikuje zakończenie rozgrywki wywołując handleGameActions("gameover")
+						//na potrzeby wyraźnego żądania zakończenia rozgrywki
 						action = "gameover";
 					break;
 				}
@@ -1045,9 +1055,12 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 			case "proceed"://DEPRECATED; j.w.
 			break;
 			case "init":
-				//action = 0;
 				sPreviousGUIState = "init";
-				controlGUIPrompts("init");
+				controlGUIPrompts("newplayer");
+			break;
+			case "continue":
+				sPreviousGUIState = "init";
+				controlGUIPrompts("oldplayer");
 			break;
 			case "newgame":
 				start();
@@ -1071,13 +1084,16 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 			break;
 			case "gameover":
 				//obsługa stanu "Zakończ grę"
-				/*TU SKOŃCZYŁEŚ
+				/*
 				 TODO: zrobić przejście od ekranu Game Over do: 
 				  - "storehiscore"
 				  lub
-				  - "continue"
+				  - "scoreboard"
 				 */
-				bGameOver = true;
+				//bGameOver = true;
+				//clearWell();
+				clearInterval(iGravityInterval);
+				main(true); //wywołujemy main() z argumentem true, aby funkcja ta zakończyła rozgrywkę
 				controlGUIPrompts("gameover");
 			break;
 			case "storehiscore":
@@ -1145,7 +1161,8 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 			break;
 			default:
 			//domyślne przypisanie wartości zmiennej sPreviousGUIState
-			sPreviousGUIState = "resume";
+			//sPreviousGUIState = "resume";
+			sPreviousGUIState = action;
 			break;
 		}
 		
@@ -1576,7 +1593,7 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 		oTicker.setAttribute("mode", "on");
 		
 		switch(action) {
-			case "init": //ekran powitalny nowego gracza zaraz po intrze (TODO: intro gry)
+			case "newplayer": //ekran powitalny nowego gracza zaraz po intrze (TODO: intro gry)
 				oTicker.firstChild.nodeValue = oGamePrompts.newGame;
 				//oOverlay.setAttribute("mode", "off");
 				//oPromptsWrapper.setAttribute("mode", "on");
@@ -1584,7 +1601,7 @@ var sCellBorderColor = Theme.well.cellBorderColor,
 				oInitScreen.setAttribute("mode", "on");
 			break;
 			
-			case "continue": //ekran powitalny stałego gracza zaraz po intrze 
+			case "oldplayer": //ekran powitalny stałego gracza zaraz po intrze 
 				oTicker.firstChild.nodeValue = oGamePrompts.continueGame;
 				//oOverlay.setAttribute("mode", "off");
 				//oPromptsWrapper.setAttribute("mode", "on");
@@ -1864,9 +1881,9 @@ document.addEventListener("keydown", handleGameActions, true);
 var a=0,
 	aGUIactions;
 do {
-	//TODO: test run nowego pomysłu na kompleksową obsługę zdarzeń (akcji) w grze
+	//TODO: zastanowić się nad przypisywaniem atrybutu "text" hiperłączom w tej pętli.
+	//aGUIhrefs[0].text = oGameInterface.settings; //tutaj zastąp iteracją po tablicy
 	aGUIhrefs[a++].addEventListener("click", handleGameActions, true);
-	//aGUIactions[a] = temp.hash.substring(1);
 }
 while(aGUIhrefs[a]);
 

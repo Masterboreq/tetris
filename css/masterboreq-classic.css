@@ -25,7 +25,9 @@ a {
 	border: 1px solid black;
 	color: #fff;
 	background-color: rgba(10,10,10, .85);
-	background-image: url(../img/footer.jpg);
+	/*background-image: url(../img/footer.png);*/
+	background-size: 50% auto;
+	background-repeat: no-repeat;
 }
 
 #toolbar {
@@ -233,7 +235,8 @@ div#well div div:first-child {
 .score {
 	font-size: 24px;
 	font-weight: bold;
-	background: rgba(160,37,37, .72);
+	/*background: rgba(160,37,37, .72); //oryginalnie projektowany */
+	background: rgba(232, 0, 0, 0.72);
 	color: #ffd255;
 }
 
@@ -325,6 +328,9 @@ div#well div div:first-child {
 .gui-prompts {
 	background: rgba(0,0,0, .89);
 	color: #fff;
+	height: 300px;
+	text-align: center;
+	padding-top: 30px;
 }
 
 .gui-buttons {
@@ -340,10 +346,10 @@ div#well div div:first-child {
 	padding-top: 10px;
 }
 .go-buttons:hover {
-	background-color: #0e0;
+	background-color: rgb(165, 245, 37);
 }
 .back-buttons:hover {
-	background-color: #e00;
+	background-color: rgb(255, 59, 0);
 }
 
 /* Ekran początkowy nowego gracza */
@@ -380,7 +386,7 @@ div#well div div:first-child {
 
 /* Ekrany końca gry */
 #abort-screen {
-	background-color: #030;
+	background-color: rgba(61, 180, 235, 0.6);
 }
 #abort-screen[mode="off"] {
 	display: none;
