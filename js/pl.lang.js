@@ -46,6 +46,9 @@ var oLang = {
 		abortGameTicker: "Potwierdź wyjście",
 		gameOver: "Koniec gry",
 		newGame: "Nowa gra",
+		newGamerInitPrompt: "Witaj Graczu!",
+		oldGamerInitPrompt: "Witaj ponownie, ", //+nameTag+"!" w controlGUIPrompts()
+		continueGame: "Kontynuuj grę",
 		beginGame: "Naciśnij spację, aby rozpocząć grę!",
 		endGame: "Czy chcesz zakończyć grę?",
 		enterHiScore: "Zapisz swój wynik",
